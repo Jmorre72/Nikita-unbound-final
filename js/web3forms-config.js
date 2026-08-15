@@ -11,4 +11,4 @@
    stuk, maar je ontvangt dan ook geen e-mails.
    ========================================================= */
 
-window.WEB3FORMS_ACCESS_KEY = "";
+window.WEB3FORMS_ACCESS_KEY = "20021df1-f06c-42cc-aaad-0698e854b81d";
