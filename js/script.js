@@ -85,6 +85,51 @@ document.addEventListener('DOMContentLoaded', () => {
   observeReveals();
 
   /* =========================================================
+     MUZIKANTEN
+     ========================================================= */
+  const musiciansGrid = document.querySelector('[data-musicians-grid]');
+  if (musiciansGrid) {
+    loadMusicians().then(musicians => {
+      if (musicians && musicians.length) renderMusicians(musicians, musiciansGrid);
+      observeReveals(musiciansGrid);
+    });
+  }
+
+  async function loadMusicians() {
+    if (window.supabaseClient) {
+      try {
+        const { data, error } = await window.supabaseClient
+          .from('musicians')
+          .select('*')
+          .order('sort_order', { ascending: true });
+        if (!error && data && data.length) return data;
+      } catch (err) {
+        console.warn('Kon muzikanten niet laden uit Supabase, gebruik standaardlijst.', err);
+      }
+    }
+    return null; // fallback: de statische kaarten in de HTML blijven gewoon staan
+  }
+
+  function renderMusicians(musicians, container) {
+    const variants = ['variant-1', 'variant-2', 'variant-3', 'variant-4'];
+    container.innerHTML = musicians.map((m, i) => `
+      <div class="musician-card reveal">
+        <div class="musician-portrait ${variants[i % variants.length]}" aria-hidden="${m.photo_url ? 'false' : 'true'}">
+          ${m.photo_url
+            ? `<img src="${m.photo_url}" alt="${(m.name || '').replace(/"/g, '&quot;')}" loading="lazy" style="object-position:${m.photo_pos_x ?? 50}% ${m.photo_pos_y ?? 50}%;">`
+            : (m.name || '?').charAt(0).toUpperCase()}
+        </div>
+        <div class="musician-body">
+          <p class="musician-role">${m.role || ''}</p>
+          <h3>${m.name || ''}</h3>
+          ${m.age ? `<p class="musician-age">${m.age} jaar</p>` : ''}
+          <p>${m.bio || ''}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* =========================================================
      KALENDER
      ========================================================= */
   const calendarList = document.querySelector('[data-calendar-list]');
@@ -283,10 +328,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* =========================================================
+     MUZIEK — opnames op de beluister-pagina
+     ========================================================= */
+  const tracksList = document.querySelector('[data-tracks-list]');
+  if (tracksList && window.supabaseClient) {
+    window.supabaseClient
+      .from('tracks')
+      .select('*')
+      .order('sort_order', { ascending: true })
+      .then(({ data, error }) => {
+        if (error || !data || !data.length) return; // fallback (voorbeeldkaarten) blijft staan
+        const noteIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>';
+        tracksList.innerHTML = data.map(t => `
+          <div class="audio-card reveal is-visible">
+            <div class="audio-icon">${noteIcon}</div>
+            <div>
+              <h3>${t.title || ''}</h3>
+              ${t.meta ? `<p class="meta">${t.meta}</p>` : ''}
+              <audio controls src="${t.audio_url}"></audio>
+            </div>
+          </div>
+        `).join('');
+      })
+      .catch(err => console.warn('Kon muziek niet laden uit Supabase, gebruik voorbeeldnummers.', err));
+  }
+
+  /* =========================================================
      FORMULIEREN — validatie + bevestigingsbericht
+     Formulieren met [data-web3forms] worden ook écht verstuurd
+     (naar het e-mailadres gekoppeld aan de Web3Forms-sleutel in
+     js/web3forms-config.js). Andere formulieren tonen enkel een
+     lokale bevestiging.
      ========================================================= */
   document.querySelectorAll('form[data-validate]').forEach(form => {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       let valid = true;
 
@@ -311,12 +386,49 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      form.classList.add('is-submitted');
-      const successEl = form.parentElement.querySelector('.form-success');
-      if (successEl) successEl.classList.add('is-visible');
-      form.reset();
-      selectedSet.clear();
-      updateSelectionBar();
+      const sendErrorEl = form.querySelector('.form-send-error');
+      if (sendErrorEl) sendErrorEl.style.display = 'none';
+
+      function finishSuccess() {
+        form.classList.add('is-submitted');
+        const successEl = form.parentElement.querySelector('.form-success');
+        if (successEl) successEl.classList.add('is-visible');
+        form.reset();
+        selectedSet.clear();
+        updateSelectionBar();
+      }
+
+      if (form.hasAttribute('data-web3forms') && window.WEB3FORMS_ACCESS_KEY) {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalLabel = submitBtn ? submitBtn.textContent : '';
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Bezig met versturen…'; }
+
+        try {
+          const formData = new FormData(form);
+          formData.append('access_key', window.WEB3FORMS_ACCESS_KEY);
+          const response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { Accept: 'application/json' },
+            body: formData
+          });
+          const result = await response.json();
+          if (!result.success) throw new Error(result.message || 'Versturen is mislukt.');
+          finishSuccess();
+        } catch (err) {
+          console.warn('Web3Forms verzending mislukt:', err);
+          if (sendErrorEl) {
+            sendErrorEl.textContent = 'Versturen is helaas mislukt. Probeer het later opnieuw, of neem rechtstreeks contact op via ' + (document.querySelector('[data-key="footer_email"]')?.textContent.trim() || 'e-mail') + '.';
+            sendErrorEl.style.display = 'block';
+          }
+        } finally {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = originalLabel; }
+        }
+        return;
+      }
+
+      // Geen Web3Forms gekoppeld (of formulier zonder [data-web3forms]):
+      // toon enkel de lokale bevestiging, zoals voorheen.
+      finishSuccess();
     });
   });
 

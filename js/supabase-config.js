@@ -14,5 +14,5 @@
    ingebouwde standaardinhoud — er gaat niets stuk.
    ========================================================= */
 
-window.SUPABASE_URL = "";
-window.SUPABASE_ANON_KEY = "";
+window.SUPABASE_URL = "https://stlrzanxcbxzpnkwmfyb.supabase.co";
+window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0bHJ6YW54Y2J4enBua3dtZnliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0NzgyNTQsImV4cCI6MjEwMjA1NDI1NH0.F7HVGi_aSboWaPGQ9WN8chf_wj6046oq4FDFYIYG_qs";
