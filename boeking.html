@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boeking — Nikita Unbound</title>
+<meta name="description" content="Boekingsinformatie voor Nikita Unbound en formulier om vrijblijvend informatie of een offerte aan te vragen.">
+<link rel="icon" href="assets/logo.jpg">
+<link rel="stylesheet" href="css/style.css">
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.jpg" alt="Nikita Unbound logo">
+      <span class="brand-word">Nikita<br><small>Unbound</small></span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu openen" aria-expanded="false">☰</button>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="muzikanten.html">Muzikanten</a></li>
+        <li><a href="repertoire.html">Repertoire</a></li>
+        <li><a href="kalender.html">Kalender</a></li>
+        <li><a href="media.html">Beluister</a></li>
+        <li><a href="fotos.html">Foto's</a></li>
+        <li><a href="boeking.html" aria-current="page">Boeking</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow on-dark" style="justify-content:center;">Boeking</p>
+    <h1>Boek Nikita Unbound voor uw feest</h1>
+    <p>Van een eerste vraag tot de dag van uw evenement — dit is hoe een boeking bij ons verloopt, en alle info die u vooraf wil weten.</p>
+  </div>
+</section>
+
+<section class="section section-deep section-tight">
+  <div class="container">
+    <div class="info-grid">
+      <div class="info-card reveal">
+        <div class="num">2</div>
+        <h3>Bezetting</h3>
+        <p>Zang en percussie, akoestisch en intiem — ideaal voor kleinere en middelgrote ruimtes, binnen of buiten.</p>
+      </div>
+      <div class="info-card reveal">
+        <div class="num">±45'</div>
+        <h3>Speelduur per set</h3>
+        <p>Sets op maat van uw programma, met pauzes voor speeches of ander vermaak. In overleg samen te stellen.</p>
+      </div>
+      <div class="info-card reveal">
+        <div class="num">±60'</div>
+        <h3>Opbouw &amp; soundcheck</h3>
+        <p>Wij komen ruim op tijd voor een discrete opbouw en soundcheck, afgestemd op de locatie.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Hoe verloopt een boeking</p>
+      <h2>In vier stappen naar uw optreden</h2>
+    </div>
+    <div class="steps-list">
+      <div class="step-item reveal">
+        <div class="step-num"></div>
+        <div><h3>Aanvraag versturen</h3><p>Vul het formulier hieronder in met de datum, locatie en aard van uw evenement.</p></div>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num"></div>
+        <div><h3>Persoonlijk contact</h3><p>Wij nemen binnen enkele dagen contact op om details en wensen te bespreken.</p></div>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num"></div>
+        <div><h3>Bevestiging &amp; nummerkeuze</h3><p>Na bevestiging kan u via de repertoirepagina uw favoriete nummers selecteren of een verzoeknummer aanvragen.</p></div>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num"></div>
+        <div><h3>Wij komen spelen</h3><p>Op de dag zelf zorgen wij voor een discrete opbouw en een sfeervol optreden op maat.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="aanvraagformulier" class="section section-dark">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow on-dark">Informatie aanvragen</p>
+      <h2>Vertel ons over uw feest</h2>
+      <p class="lead-text" data-key="booking_lede">Vul onderstaand formulier in en we bezorgen u vrijblijvend meer informatie of een offerte op maat.</p>
+    </div>
+
+    <form data-validate class="reveal" novalidate>
+      <div class="form-fields">
+        <div class="form-grid">
+          <div class="field">
+            <label for="naam">Naam</label>
+            <input type="text" id="naam" name="naam" required>
+            <p class="field-error">Vul uw naam in.</p>
+          </div>
+          <div class="field">
+            <label for="email">E-mailadres</label>
+            <input type="email" id="email" name="email" required>
+            <p class="field-error">Vul een geldig e-mailadres in.</p>
+          </div>
+          <div class="field">
+            <label for="telefoon">Telefoonnummer</label>
+            <input type="tel" id="telefoon" name="telefoon">
+          </div>
+          <div class="field">
+            <label for="datum">Gewenste datum</label>
+            <input type="date" id="datum" name="datum" required>
+            <p class="field-error">Vul de gewenste datum in.</p>
+          </div>
+          <div class="field">
+            <label for="type-event">Type gelegenheid</label>
+            <select id="type-event" name="type_event" required>
+              <option value="">Kies een optie</option>
+              <option>Trouwreceptie</option>
+              <option>Receptie</option>
+              <option>Tuinfeest</option>
+              <option>Personeelsfeest</option>
+              <option>Andere</option>
+            </select>
+            <p class="field-error">Kies het type gelegenheid.</p>
+          </div>
+          <div class="field">
+            <label for="gasten">Aantal gasten (ongeveer)</label>
+            <input type="number" id="gasten" name="gasten" min="1">
+          </div>
+          <div class="field full">
+            <label for="locatie">Locatie van het evenement</label>
+            <input type="text" id="locatie" name="locatie" placeholder="Stad of exacte locatie, indien al gekend">
+          </div>
+          <div class="field full">
+            <label for="bericht">Bericht</label>
+            <textarea id="bericht" name="bericht" placeholder="Vertel ons meer over uw feest, gewenste speelduur, sfeer, ..."></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-gold mt-40">Verstuur aanvraag</button>
+        <p class="form-note">We behandelen uw gegevens vertrouwelijk en gebruiken ze uitsluitend om uw aanvraag te beantwoorden.</p>
+      </div>
+      <p class="form-success">Bedankt voor uw aanvraag! We nemen binnenkort contact met u op.</p>
+    </form>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-brand">
+          <img src="assets/logo.jpg" alt="Nikita Unbound logo">
+          <span>Nikita Unbound</span>
+        </div>
+        <p>Sfeervolle akoestische muziek voor trouwrecepties, recepties, tuinfeesten en personeelsfeesten.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigatie</h4>
+        <ul>
+          <li><a href="muzikanten.html">Muzikanten</a></li>
+          <li><a href="repertoire.html">Repertoire</a></li>
+          <li><a href="kalender.html">Kalender</a></li>
+          <li><a href="media.html">Beluister</a></li>
+          <li><a href="fotos.html">Foto's</a></li>
+          <li><a href="boeking.html">Boeking</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <p>info@nikitaunbound.be</p>
+        <p>+32 470 00 00 00</p>
+        <p>Gent, België</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> Nikita Unbound. Alle rechten voorbehouden.</span>
+      <span>Akoestisch • Intiem • Onbegrensd</span>
+      <a href="admin.html" style="opacity:.45;font-size:.78rem;">Beheer</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/content.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muzikanten — Nikita Unbound</title>
+<meta name="description" content="Maak kennis met Nikita (zang) en Jan (percussie), de muzikanten achter Nikita Unbound.">
+<link rel="icon" href="assets/logo.jpg">
+<link rel="stylesheet" href="css/style.css">
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.jpg" alt="Nikita Unbound logo">
+      <span class="brand-word">Nikita<br><small>Unbound</small></span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu openen" aria-expanded="false">☰</button>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="muzikanten.html" aria-current="page">Muzikanten</a></li>
+        <li><a href="repertoire.html">Repertoire</a></li>
+        <li><a href="kalender.html">Kalender</a></li>
+        <li><a href="media.html">Beluister</a></li>
+        <li><a href="fotos.html">Foto's</a></li>
+        <li><a href="boeking.html">Boeking</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow on-dark" style="justify-content:center;">De muzikanten</p>
+    <h1>Twee stemmen, één ritme</h1>
+    <p>Achter Nikita Unbound schuilen twee muzikanten met een gedeelde liefde voor tijdloze songs — elk met hun eigen achtergrond en hun eigen instrument.</p>
+  </div>
+</section>
+
+<section class="section section-dark">
+  <div class="container">
+    <div class="musicians">
+      <div class="musician-card reveal">
+        <div class="musician-portrait nikita" aria-hidden="true">N</div>
+        <div class="musician-body">
+          <p class="musician-role">Lead zang</p>
+          <h3>Nikita</h3>
+          <p class="musician-age">27 jaar</p>
+          <p data-key="nikita_bio">Met haar frisse, warme stem is Nikita het kloppend hart van de band. Ze weet elk nummer een persoonlijke, ingetogen kleur te geven — van een tere ballad tot een meeslepende klassieker. Haar zang staat centraal in de akoestische, intieme signatuur van Nikita Unbound.</p>
+        </div>
+      </div>
+      <div class="musician-card reveal">
+        <div class="musician-portrait jan" aria-hidden="true">J</div>
+        <div class="musician-body">
+          <p class="musician-role">Percussie</p>
+          <h3>Jan</h3>
+          <p class="musician-age">54 jaar</p>
+          <p data-key="jan_bio">Jan brengt jarenlange muzikale ervaring mee en zorgt met subtiele, gevoelige percussie voor de puls onder elk nummer. Zijn spel is nooit dominant, maar geeft de songs precies de beweging en warmte die ze nodig hebben.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="trio-note reveal">
+      Samen bouwden Nikita en Jan een repertoire uit dat moeiteloos schakelt tussen decennia en stijlen — steeds met hetzelfde uitgangspunt: een sfeervolle, intieme uitvoering die past bij het moment.
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="feather-divider on-light reveal" style="margin-bottom:56px;">
+      <span class="line"></span>
+      <img src="assets/feather.png" alt="" class="divider-feather">
+      <span class="line"></span>
+    </div>
+    <div class="section-head center reveal">
+      <p class="eyebrow">Onze klank</p>
+      <h2>Akoestisch, ingetogen, tijdloos</h2>
+      <p class="lead-text" style="margin:0 auto 28px;">Benieuwd hoe dat precies klinkt? Beluister opnames en bekijk live-beelden, of ontdek het volledige repertoire.</p>
+      <div class="cta-row" style="justify-content:center;">
+        <a href="media.html" class="btn btn-outline-dark">Beluister ons</a>
+        <a href="repertoire.html" class="btn btn-gold">Bekijk repertoire</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-brand">
+          <img src="assets/logo.jpg" alt="Nikita Unbound logo">
+          <span>Nikita Unbound</span>
+        </div>
+        <p>Sfeervolle akoestische muziek voor trouwrecepties, recepties, tuinfeesten en personeelsfeesten.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigatie</h4>
+        <ul>
+          <li><a href="muzikanten.html">Muzikanten</a></li>
+          <li><a href="repertoire.html">Repertoire</a></li>
+          <li><a href="kalender.html">Kalender</a></li>
+          <li><a href="media.html">Beluister</a></li>
+          <li><a href="fotos.html">Foto's</a></li>
+          <li><a href="boeking.html">Boeking</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <p>info@nikitaunbound.be</p>
+        <p>+32 470 00 00 00</p>
+        <p>Gent, België</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> Nikita Unbound. Alle rechten voorbehouden.</span>
+      <span>Akoestisch • Intiem • Onbegrensd</span>
+      <a href="admin.html" style="opacity:.45;font-size:.78rem;">Beheer</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/content.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

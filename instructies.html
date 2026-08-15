@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beheer instellen — Nikita Unbound</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/logo.jpg">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.jpg" alt="Nikita Unbound logo">
+      <span class="brand-word">Nikita<br><small>Unbound</small></span>
+    </a>
+    <a href="admin.html" class="btn btn-outline" style="padding:10px 20px;">Naar beheerpaneel</a>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow on-dark" style="justify-content:center;">Eenmalig instellen</p>
+    <h1>Beheer koppelen aan de website</h1>
+    <p>Dit hoef je maar één keer te doen. Reken op zo'n 15 minuten. Alles hieronder is gratis (Supabase heeft een gratis laag die ruim voldoende is voor deze website).</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="steps-list">
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Maak een gratis Supabase-account</h3>
+          <p>Ga naar <strong>supabase.com</strong> en meld je aan (bijvoorbeeld met je Google-account). Maak daarna een nieuw project aan — kies een naam zoals "nikita-unbound" en een wachtwoord voor de database (bewaar dit ergens veilig, je hebt het zelden nodig).</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Voer het databasescript uit</h3>
+          <p>Open in je Supabase-project het onderdeel <strong>SQL Editor</strong> (links in het menu) → <strong>New query</strong>. Open het bestand <code>supabase/schema.sql</code> uit de websitebestanden, kopieer de volledige inhoud, plak dit in de SQL Editor en klik op <strong>Run</strong>. Dit maakt alle tabellen aan en vult ze met de huidige inhoud van de website.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Maak een opslagruimte voor foto's</h3>
+          <p>Ga naar <strong>Storage</strong> in het menu → <strong>New bucket</strong>. Geef als naam exact <code>photos</code> in en zet <strong>Public bucket</strong> aan. Klik op <strong>Create bucket</strong>.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Maak jezelf aan als beheerder</h3>
+          <p>Ga naar <strong>Authentication → Users</strong> → <strong>Add user</strong> → <strong>Create new user</strong>. Vul je e-mailadres en een wachtwoord in en vink <strong>Auto Confirm User</strong> aan. Dit e-mailadres en wachtwoord gebruik je straks om in te loggen op <code>admin.html</code>.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Koppel de website aan je project</h3>
+          <p>Ga naar <strong>Project Settings → API</strong>. Kopieer de <strong>Project URL</strong> en de <strong>anon public</strong> key. Open het bestand <code>js/supabase-config.js</code> in de websitebestanden en vul beide waarden in tussen de aanhalingstekens:</p>
+          <pre style="background:#10203A;color:#F6EEE0;padding:18px 20px;border-radius:4px;font-size:.85rem;overflow-x:auto;">window.SUPABASE_URL = "https://jouw-project.supabase.co";
+window.SUPABASE_ANON_KEY = "jouw-anon-public-key";</pre>
+          <p class="field-hint">Bewaar het bestand en upload het (samen met de rest van de site) naar je webhosting. Dit is de enige stap die je moet herhalen als je ooit van hostingpartij wisselt.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Klaar — log in</h3>
+          <p>Ga naar <a href="admin.html">admin.html</a> op je website en log in met het e-mailadres en wachtwoord van stap 4. Je kan nu teksten aanpassen, foto's toevoegen of verwijderen, en de kalender en het repertoire bijhouden — meteen zichtbaar voor iedereen die de website bezoekt.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="trio-note mt-40" style="border-color: rgba(16,32,58,.15); color: var(--navy);">
+      <strong>Nog geen webhosting?</strong> Omdat Supabase de volledige achterkant (login, database, foto-opslag) voor zijn rekening neemt, volstaat de goedkoopste of zelfs gratis hosting voor de website zelf (bijvoorbeeld Netlify, GitHub Pages, of gewone hosting bij Combell/One.com). Vraag het gerust als je hulp wil bij het kiezen of instellen daarvan.
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© <span data-year></span> Nikita Unbound. Alle rechten voorbehouden.</span>
+      <a href="admin.html" style="opacity:.45;font-size:.78rem;">Beheer</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>

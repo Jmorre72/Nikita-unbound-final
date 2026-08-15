@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beheer — Nikita Unbound</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/logo.jpg">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.jpg" alt="Nikita Unbound logo">
+      <span class="brand-word">Nikita<br><small>Unbound</small></span>
+    </a>
+    <a href="index.html" class="btn btn-outline" style="padding:10px 20px;">← Terug naar de website</a>
+  </div>
+</header>
+
+<main class="admin-wrap">
+  <div class="container">
+
+    <div id="config-warning" class="config-warning" hidden>
+      <strong>Supabase is nog niet gekoppeld.</strong> Zolang je geen project hebt aangemaakt en gekoppeld, kan je hier niet inloggen en worden wijzigingen niet bewaard. Volg de stappen in <a href="instructies.html">instructies.html</a>.
+    </div>
+
+    <section id="login-section" class="admin-login-wrap">
+      <div class="admin-login-card">
+        <img src="assets/logo.jpg" alt="Nikita Unbound" class="admin-login-logo">
+        <h1>Beheerpaneel</h1>
+        <p>Log in om foto's, teksten, de kalender en het repertoire te bewerken.</p>
+        <form id="login-form">
+          <div class="field">
+            <label for="login-email">E-mailadres</label>
+            <input type="email" id="login-email" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <label for="login-password">Wachtwoord</label>
+            <input type="password" id="login-password" autocomplete="current-password" required>
+          </div>
+          <p id="login-error" class="field-error" style="display:none;"></p>
+          <button type="submit" class="btn btn-gold btn-block" id="login-submit">Inloggen</button>
+        </form>
+        <p class="field-hint" style="margin-top:18px;">Nog geen account? Een beheerder maakt dit voor je aan in het Supabase-dashboard — zie <a href="instructies.html">instructies.html</a>.</p>
+      </div>
+    </section>
+
+    <section id="dashboard-section" hidden>
+      <div class="admin-topbar">
+        <div>Ingelogd als <strong id="user-email"></strong></div>
+        <button id="logout-btn" class="btn btn-outline-dark">Uitloggen</button>
+      </div>
+
+      <div id="save-toast" class="save-toast" hidden></div>
+
+      <nav class="tab-bar">
+        <button class="tab-btn is-active" data-tab="teksten" type="button">Teksten</button>
+        <button class="tab-btn" data-tab="fotos" type="button">Foto's</button>
+        <button class="tab-btn" data-tab="kalender" type="button">Kalender</button>
+        <button class="tab-btn" data-tab="repertoire" type="button">Repertoire</button>
+      </nav>
+
+      <!-- ---------- TEKSTEN ---------- -->
+      <div class="tab-panel" data-tab-panel="teksten">
+        <p class="lead-text">Pas hier de belangrijkste teksten op de website aan. Wijzigingen zijn meteen zichtbaar voor bezoekers na het bewaren.</p>
+        <div class="admin-text-fields">
+
+          <div class="admin-text-field" data-text-key="hero_eyebrow">
+            <label>Startpagina — label boven titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+
+          <div class="admin-text-field" data-text-key="hero_title">
+            <label>Startpagina — hoofdtitel <span class="field-hint">(eenvoudige HTML zoals &lt;br&gt; en &lt;em&gt; toegelaten)</span></label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+
+          <div class="admin-text-field" data-text-key="hero_lede">
+            <label>Startpagina — inleidende alinea</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+
+          <div class="admin-text-field" data-text-key="about_eyebrow">
+            <label>Startpagina — label boven "Over Nikita Unbound"</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+
+          <div class="admin-text-field" data-text-key="about_title">
+            <label>Startpagina — titel "Over Nikita Unbound"</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+
+          <div class="admin-text-field" data-text-key="about_text">
+            <label>Startpagina — tekst "Over Nikita Unbound"</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+
+          <div class="admin-text-field" data-text-key="nikita_bio">
+            <label>Muzikanten — biografie Nikita</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+
+          <div class="admin-text-field" data-text-key="jan_bio">
+            <label>Muzikanten — biografie Jan</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+
+          <div class="admin-text-field" data-text-key="booking_lede">
+            <label>Boeking — inleidende zin bij het formulier</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ---------- FOTO'S ---------- -->
+      <div class="tab-panel" data-tab-panel="fotos" hidden>
+        <p class="lead-text">Voeg foto's toe of verwijder ze. Nieuwe foto's verschijnen meteen op de fotopagina.</p>
+
+        <form id="photo-upload-form" class="admin-upload-form">
+          <div class="field">
+            <label for="photo-file">Nieuwe foto</label>
+            <input type="file" id="photo-file" accept="image/*" required>
+          </div>
+          <div class="field">
+            <label for="photo-caption">Bijschrift (optioneel)</label>
+            <input type="text" id="photo-caption" placeholder="Bv. Optreden receptie Van Damme">
+          </div>
+          <button type="submit" class="btn btn-gold" id="photo-upload-btn">Foto toevoegen</button>
+          <p id="photo-upload-error" class="field-error" style="display:none;"></p>
+        </form>
+
+        <div class="admin-photo-grid" id="admin-photo-grid"></div>
+      </div>
+
+      <!-- ---------- KALENDER ---------- -->
+      <div class="tab-panel" data-tab-panel="kalender" hidden>
+        <p class="lead-text">Beheer de optredens die op de kalenderpagina verschijnen.</p>
+
+        <form id="gig-add-form" class="admin-inline-form">
+          <input type="date" id="gig-date" required aria-label="Datum">
+          <input type="text" id="gig-title" placeholder="Titel (bv. Trouwreceptie — Familie X)" required aria-label="Titel">
+          <input type="text" id="gig-location" placeholder="Locatie" required aria-label="Locatie">
+          <select id="gig-status" aria-label="Status">
+            <option value="private">Besloten</option>
+            <option value="open">Vrij toegankelijk</option>
+          </select>
+          <button type="submit" class="btn btn-gold">Toevoegen</button>
+        </form>
+
+        <div class="admin-list" id="admin-gig-list"></div>
+      </div>
+
+      <!-- ---------- REPERTOIRE ---------- -->
+      <div class="tab-panel" data-tab-panel="repertoire" hidden>
+        <p class="lead-text">Beheer de nummers uit het repertoire.</p>
+
+        <form id="song-add-form" class="admin-inline-form">
+          <input type="text" id="song-title" placeholder="Titel" required aria-label="Titel">
+          <input type="text" id="song-artist" placeholder="Artiest" required aria-label="Artiest">
+          <select id="song-decade" aria-label="Decennium">
+            <option value="60s">Jaren 60</option>
+            <option value="70s">Jaren 70</option>
+            <option value="80s">Jaren 80</option>
+            <option value="90s">Jaren 90</option>
+            <option value="2000s">Jaren 2000</option>
+            <option value="2010s" selected>Jaren 2010+</option>
+          </select>
+          <button type="submit" class="btn btn-gold">Toevoegen</button>
+        </form>
+
+        <div class="admin-list" id="admin-song-list"></div>
+      </div>
+
+    </section>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

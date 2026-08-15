@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalender — Nikita Unbound</title>
+<meta name="description" content="Overzicht van de aankomende optredens van Nikita Unbound.">
+<link rel="icon" href="assets/logo.jpg">
+<link rel="stylesheet" href="css/style.css">
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.jpg" alt="Nikita Unbound logo">
+      <span class="brand-word">Nikita<br><small>Unbound</small></span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu openen" aria-expanded="false">☰</button>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="muzikanten.html">Muzikanten</a></li>
+        <li><a href="repertoire.html">Repertoire</a></li>
+        <li><a href="kalender.html" aria-current="page">Kalender</a></li>
+        <li><a href="media.html">Beluister</a></li>
+        <li><a href="fotos.html">Foto's</a></li>
+        <li><a href="boeking.html">Boeking</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow on-dark" style="justify-content:center;">Agenda</p>
+    <h1>Aankomende optredens</h1>
+    <p>Een overzicht van waar en wanneer u Nikita Unbound kan horen spelen. Sommige optredens zijn besloten feesten, andere zijn vrij toegankelijk.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div data-calendar-list class="calendar-list"></div>
+  </div>
+</section>
+
+<section class="section section-dark section-tight">
+  <div class="container">
+    <div class="section-head center reveal">
+      <p class="eyebrow on-dark">Uw datum nog niet gevonden?</p>
+      <h2>Vraag uw eigen optreden aan</h2>
+      <p class="lead-text" style="margin:0 auto 28px;">Wij plannen graag mee met uw agenda. Stuur ons uw gewenste datum door via het boekingsformulier.</p>
+      <a href="boeking.html" class="btn btn-gold">Naar boekingsinformatie</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-brand">
+          <img src="assets/logo.jpg" alt="Nikita Unbound logo">
+          <span>Nikita Unbound</span>
+        </div>
+        <p>Sfeervolle akoestische muziek voor trouwrecepties, recepties, tuinfeesten en personeelsfeesten.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigatie</h4>
+        <ul>
+          <li><a href="muzikanten.html">Muzikanten</a></li>
+          <li><a href="repertoire.html">Repertoire</a></li>
+          <li><a href="kalender.html">Kalender</a></li>
+          <li><a href="media.html">Beluister</a></li>
+          <li><a href="fotos.html">Foto's</a></li>
+          <li><a href="boeking.html">Boeking</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <p>info@nikitaunbound.be</p>
+        <p>+32 470 00 00 00</p>
+        <p>Gent, België</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> Nikita Unbound. Alle rechten voorbehouden.</span>
+      <span>Akoestisch • Intiem • Onbegrensd</span>
+      <a href="admin.html" style="opacity:.45;font-size:.78rem;">Beheer</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/content.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
