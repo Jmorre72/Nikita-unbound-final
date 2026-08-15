@@ -12,11 +12,11 @@
 
 <header class="site-header">
   <div class="container">
-    <a href="index.html" class="brand">
+    <a href="home.html" class="brand">
       <img src="assets/logo.jpg" alt="Nikita Unbound logo">
       <span class="brand-word">Nikita<br><small>Unbound</small></span>
     </a>
-    <a href="index.html" class="btn btn-outline" style="padding:10px 20px;">← Terug naar de website</a>
+    <a href="home.html" class="btn btn-outline" style="padding:10px 20px;">← Terug naar de website</a>
   </div>
 </header>
 
@@ -58,71 +58,712 @@
 
       <nav class="tab-bar">
         <button class="tab-btn is-active" data-tab="teksten" type="button">Teksten</button>
+        <button class="tab-btn" data-tab="muzikanten" type="button">Muzikanten</button>
         <button class="tab-btn" data-tab="fotos" type="button">Foto's</button>
+        <button class="tab-btn" data-tab="muziek" type="button">Muziek</button>
         <button class="tab-btn" data-tab="kalender" type="button">Kalender</button>
         <button class="tab-btn" data-tab="repertoire" type="button">Repertoire</button>
       </nav>
 
       <!-- ---------- TEKSTEN ---------- -->
       <div class="tab-panel" data-tab-panel="teksten">
-        <p class="lead-text">Pas hier de belangrijkste teksten op de website aan. Wijzigingen zijn meteen zichtbaar voor bezoekers na het bewaren.</p>
-        <div class="admin-text-fields">
+        <p class="lead-text">Pas hier alle teksten op de website aan, gegroepeerd per pagina. Klik op een paginanaam om die open- of dicht te klappen. Wijzigingen zijn meteen zichtbaar voor bezoekers na het bewaren.</p>
+        <div class="admin-text-groups">
+        <details class="admin-text-group" open>
+          <summary>Overal (navigatie &amp; footer)</summary>
+          <div class="admin-text-fields">
+          <div class="admin-text-field" data-text-key="nav_home">
+            <label>Menu-item: Home</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="nav_muzikanten">
+            <label>Menu-item: Muzikanten</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="nav_repertoire">
+            <label>Menu-item: Repertoire</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="nav_kalender">
+            <label>Menu-item: Kalender</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="nav_media">
+            <label>Menu-item: Beluister</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="nav_fotos">
+            <label>Menu-item: Foto&#x27;s</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="nav_boeking">
+            <label>Menu-item: Boeking</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="cta_boeking_btn">
+            <label>Knop “Naar boekingsinformatie” (Kalender/Beluister/Foto&#x27;s)</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="footer_blurb">
+            <label>Footer: korte omschrijving</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="footer_nav_heading">
+            <label>Footer: titel “Navigatie”</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="footer_contact_heading">
+            <label>Footer: titel “Contact”</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="footer_email">
+            <label>Footer: e-mailadres</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="footer_phone">
+            <label>Footer: telefoonnummer</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="footer_city">
+            <label>Footer: locatie</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="footer_copyright">
+            <label>Footer: copyright-tekst (na het jaartal)</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="footer_tagline">
+            <label>Footer: kleine tagline rechts</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          </div>
+        </details>
 
+        <details class="admin-text-group">
+          <summary>Welkomstscherm</summary>
+          <div class="admin-text-fields">
+          <div class="admin-text-field" data-text-key="splash_cta">
+            <label>Linktekst naar de homepage</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          </div>
+        </details>
+
+        <details class="admin-text-group">
+          <summary>Startpagina</summary>
+          <div class="admin-text-fields">
           <div class="admin-text-field" data-text-key="hero_eyebrow">
-            <label>Startpagina — label boven titel</label>
+            <label>Hero: label boven titel</label>
             <input type="text" class="text-input">
             <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
           </div>
-
           <div class="admin-text-field" data-text-key="hero_title">
-            <label>Startpagina — hoofdtitel <span class="field-hint">(eenvoudige HTML zoals &lt;br&gt; en &lt;em&gt; toegelaten)</span></label>
+            <label>Hero: hoofdtitel (HTML zoals &lt;br&gt;/&lt;em&gt; toegelaten)</label>
             <textarea class="text-input"></textarea>
             <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
           </div>
-
           <div class="admin-text-field" data-text-key="hero_lede">
-            <label>Startpagina — inleidende alinea</label>
+            <label>Hero: inleidende alinea</label>
             <textarea class="text-input"></textarea>
             <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
           </div>
-
+          <div class="admin-text-field" data-text-key="hero_btn_boeking">
+            <label>Hero: knop “Vraag een boeking aan”</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="hero_btn_media">
+            <label>Hero: knop “Beluister ons”</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="occasions_eyebrow">
+            <label>Gelegenheden: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="occasions_title">
+            <label>Gelegenheden: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="occasions_lead">
+            <label>Gelegenheden: inleidende tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="occasion1_title">
+            <label>Kaart 1: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="occasion1_desc">
+            <label>Kaart 1: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="occasion2_title">
+            <label>Kaart 2: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="occasion2_desc">
+            <label>Kaart 2: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="occasion3_title">
+            <label>Kaart 3: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="occasion3_desc">
+            <label>Kaart 3: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="occasion4_title">
+            <label>Kaart 4: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="occasion4_desc">
+            <label>Kaart 4: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
           <div class="admin-text-field" data-text-key="about_eyebrow">
-            <label>Startpagina — label boven "Over Nikita Unbound"</label>
+            <label>Over ons: label</label>
             <input type="text" class="text-input">
             <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
           </div>
-
           <div class="admin-text-field" data-text-key="about_title">
-            <label>Startpagina — titel "Over Nikita Unbound"</label>
+            <label>Over ons: titel</label>
             <input type="text" class="text-input">
             <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
           </div>
-
           <div class="admin-text-field" data-text-key="about_text">
-            <label>Startpagina — tekst "Over Nikita Unbound"</label>
+            <label>Over ons: tekst</label>
             <textarea class="text-input"></textarea>
             <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
           </div>
-
-          <div class="admin-text-field" data-text-key="nikita_bio">
-            <label>Muzikanten — biografie Nikita</label>
+          <div class="admin-text-field" data-text-key="about_btn">
+            <label>Over ons: knop</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="home_cta_eyebrow">
+            <label>Onderaan: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="home_cta_title">
+            <label>Onderaan: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="home_cta_lead">
+            <label>Onderaan: tekst</label>
             <textarea class="text-input"></textarea>
             <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
           </div>
+          <div class="admin-text-field" data-text-key="home_cta_btn1">
+            <label>Onderaan: knop “Bekijk kalender”</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="home_cta_btn2">
+            <label>Onderaan: knop “Boekingsinformatie”</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          </div>
+        </details>
 
-          <div class="admin-text-field" data-text-key="jan_bio">
-            <label>Muzikanten — biografie Jan</label>
+        <details class="admin-text-group">
+          <summary>Muzikanten</summary>
+          <div class="admin-text-fields">
+          <div class="admin-text-field" data-text-key="muz_hero_eyebrow">
+            <label>Hero: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="muz_hero_title">
+            <label>Hero: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="muz_hero_lead">
+            <label>Hero: tekst</label>
             <textarea class="text-input"></textarea>
             <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
           </div>
+          <div class="admin-text-field" data-text-key="muz_trio_note">
+            <label>Kadertekst onder de muzikanten</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="muz_cta_eyebrow">
+            <label>Onderaan: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="muz_cta_title">
+            <label>Onderaan: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="muz_cta_lead">
+            <label>Onderaan: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="muz_cta_btn1">
+            <label>Onderaan: knop “Beluister ons”</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="muz_cta_btn2">
+            <label>Onderaan: knop “Bekijk repertoire”</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          </div>
+        </details>
 
+        <details class="admin-text-group">
+          <summary>Kalender</summary>
+          <div class="admin-text-fields">
+          <div class="admin-text-field" data-text-key="kal_hero_eyebrow">
+            <label>Hero: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="kal_hero_title">
+            <label>Hero: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="kal_hero_lead">
+            <label>Hero: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="kal_cta_eyebrow">
+            <label>Onderaan: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="kal_cta_title">
+            <label>Onderaan: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="kal_cta_lead">
+            <label>Onderaan: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          </div>
+        </details>
+
+        <details class="admin-text-group">
+          <summary>Repertoire</summary>
+          <div class="admin-text-fields">
+          <div class="admin-text-field" data-text-key="rep_hero_eyebrow">
+            <label>Hero: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="rep_hero_title">
+            <label>Hero: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="rep_hero_lead">
+            <label>Hero: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="rep_selection_label">
+            <label>Tekst naast het aantal geselecteerde nummers</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="rep_selection_btn">
+            <label>Knop “Selectie doorsturen”</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="rep_form_eyebrow">
+            <label>Formulier: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="rep_form_title">
+            <label>Formulier: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="rep_form_lead">
+            <label>Formulier: inleidende tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="rep_submit_btn">
+            <label>Knop “Nummerkeuze doorsturen”</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="rep_form_note">
+            <label>Tekst onder de verzendknop (HTML-link toegelaten)</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="rep_success_msg">
+            <label>Bevestigingsbericht na verzenden</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          </div>
+        </details>
+
+        <details class="admin-text-group">
+          <summary>Boeking</summary>
+          <div class="admin-text-fields">
+          <div class="admin-text-field" data-text-key="boek_hero_eyebrow">
+            <label>Hero: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="boek_hero_title">
+            <label>Hero: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="boek_hero_lead">
+            <label>Hero: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="info_card1_num">
+            <label>Kaart 1: cijfer/label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="info_card1_title">
+            <label>Kaart 1: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="info_card1_desc">
+            <label>Kaart 1: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="info_card2_num">
+            <label>Kaart 2: cijfer/label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="info_card2_title">
+            <label>Kaart 2: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="info_card2_desc">
+            <label>Kaart 2: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="info_card3_num">
+            <label>Kaart 3: cijfer/label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="info_card3_title">
+            <label>Kaart 3: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="info_card3_desc">
+            <label>Kaart 3: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="steps_eyebrow">
+            <label>Stappen: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="steps_title">
+            <label>Stappen: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="step1_title">
+            <label>Stap 1: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="step1_desc">
+            <label>Stap 1: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="step2_title">
+            <label>Stap 2: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="step2_desc">
+            <label>Stap 2: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="step3_title">
+            <label>Stap 3: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="step3_desc">
+            <label>Stap 3: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="step4_title">
+            <label>Stap 4: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="step4_desc">
+            <label>Stap 4: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="boek_form_eyebrow">
+            <label>Formulier: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="boek_form_title">
+            <label>Formulier: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
           <div class="admin-text-field" data-text-key="booking_lede">
-            <label>Boeking — inleidende zin bij het formulier</label>
+            <label>Formulier: inleidende zin</label>
             <textarea class="text-input"></textarea>
             <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
           </div>
+          <div class="admin-text-field" data-text-key="boek_submit_btn">
+            <label>Knop “Verstuur aanvraag”</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="boek_form_note">
+            <label>Privacyzin onder de knop</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="boek_success_msg">
+            <label>Bevestigingsbericht na verzenden</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          </div>
+        </details>
 
+        <details class="admin-text-group">
+          <summary>Beluister</summary>
+          <div class="admin-text-fields">
+          <div class="admin-text-field" data-text-key="media_hero_eyebrow">
+            <label>Hero: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="media_hero_title">
+            <label>Hero: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="media_hero_lead">
+            <label>Hero: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="videos_eyebrow">
+            <label>Video&#x27;s: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="videos_title">
+            <label>Video&#x27;s: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="video1_title">
+            <label>Video 1: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="video1_desc">
+            <label>Video 1: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="video2_title">
+            <label>Video 2: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="video2_desc">
+            <label>Video 2: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="videos_placeholder_note">
+            <label>Video&#x27;s: opmerking onder de placeholders</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="audio_eyebrow">
+            <label>Opnames: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="audio_title">
+            <label>Opnames: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="audio1_title">
+            <label>Opname 1: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="audio1_meta">
+            <label>Opname 1: type</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="audio2_title">
+            <label>Opname 2: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="audio2_meta">
+            <label>Opname 2: type</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="audio3_title">
+            <label>Opname 3: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="audio3_meta">
+            <label>Opname 3: type</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="audio_placeholder_note">
+            <label>Opnames: opmerking onder de spelers</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="media_cta_eyebrow">
+            <label>Onderaan: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="media_cta_title">
+            <label>Onderaan: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          </div>
+        </details>
+
+        <details class="admin-text-group">
+          <summary>Foto&#x27;s</summary>
+          <div class="admin-text-fields">
+          <div class="admin-text-field" data-text-key="fotos_hero_eyebrow">
+            <label>Hero: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="fotos_hero_title">
+            <label>Hero: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="fotos_hero_lead">
+            <label>Hero: tekst</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="fotos_placeholder_note">
+            <label>Opmerking onder de placeholders</label>
+            <textarea class="text-input"></textarea>
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="fotos_cta_eyebrow">
+            <label>Onderaan: label</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          <div class="admin-text-field" data-text-key="fotos_cta_title">
+            <label>Onderaan: titel</label>
+            <input type="text" class="text-input">
+            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+          </div>
+          </div>
+        </details>
         </div>
+      </div>
+
+      <!-- ---------- MUZIKANTEN ---------- -->
+      <div class="tab-panel" data-tab-panel="muzikanten" hidden>
+        <p class="lead-text">Beheer de muzikanten die op de "Muzikanten"-pagina verschijnen — voeg iemand toe, pas gegevens aan, of verwijder iemand.</p>
+
+        <form id="musician-add-form" class="admin-inline-form" style="align-items: flex-start;">
+          <input type="text" id="musician-name" placeholder="Naam" required aria-label="Naam">
+          <input type="text" id="musician-role" placeholder="Rol (bv. Lead zang)" required aria-label="Rol">
+          <input type="number" id="musician-age" placeholder="Leeftijd (optioneel)" min="0" style="max-width:140px;" aria-label="Leeftijd">
+          <textarea id="musician-bio" placeholder="Korte biografie" rows="2" style="flex-basis:100%;padding:10px 12px;border:1px solid rgba(16,32,58,.2);border-radius:3px;font-family:var(--font-body);font-size:.88rem;"></textarea>
+          <div class="field" style="flex-basis:100%; margin-bottom:0;">
+            <label for="musician-photo" style="display:block; font-size:.78rem; font-weight:600; margin-bottom:8px;">Foto (optioneel — zonder foto verschijnt een gekleurde letter)</label>
+            <input type="file" id="musician-photo" accept="image/*" class="musician-photo-input">
+          </div>
+          <div class="photo-position-editor" id="musician-add-position">
+            <div class="photo-position-frame" data-pos-x="50" data-pos-y="50">
+              <img src="" alt="">
+            </div>
+            <p class="photo-position-hint">Sleep de foto om het gezicht te centreren.</p>
+          </div>
+          <button type="submit" class="btn btn-gold">Toevoegen</button>
+          <p id="musician-upload-error" class="field-error" style="display:none; flex-basis:100%;"></p>
+        </form>
+
+        <div class="admin-list" id="admin-musician-list"></div>
       </div>
 
       <!-- ---------- FOTO'S ---------- -->
@@ -143,6 +784,30 @@
         </form>
 
         <div class="admin-photo-grid" id="admin-photo-grid"></div>
+      </div>
+
+      <!-- ---------- MUZIEK ---------- -->
+      <div class="tab-panel" data-tab-panel="muziek" hidden>
+        <p class="lead-text">Upload opnames of verwijder ze. Nieuwe nummers verschijnen meteen op de "Beluister"-pagina.</p>
+
+        <form id="track-upload-form" class="admin-upload-form">
+          <div class="field">
+            <label for="track-file">Audiobestand (mp3, wav, ...)</label>
+            <input type="file" id="track-file" accept="audio/*" required>
+          </div>
+          <div class="field">
+            <label for="track-title">Titel</label>
+            <input type="text" id="track-title" placeholder="Bv. Fly Me to the Moon" required>
+          </div>
+          <div class="field">
+            <label for="track-meta">Omschrijving (optioneel)</label>
+            <input type="text" id="track-meta" placeholder="Bv. Studio-opname">
+          </div>
+          <button type="submit" class="btn btn-gold" id="track-upload-btn">Nummer toevoegen</button>
+          <p id="track-upload-error" class="field-error" style="display:none;"></p>
+        </form>
+
+        <div class="admin-list" id="admin-track-list"></div>
       </div>
 
       <!-- ---------- KALENDER ---------- -->

@@ -13,20 +13,20 @@
 
 <header class="site-header">
   <div class="container">
-    <a href="index.html" class="brand">
+    <a href="home.html" class="brand">
       <img src="assets/logo.jpg" alt="Nikita Unbound logo">
       <span class="brand-word">Nikita<br><small>Unbound</small></span>
     </a>
     <button class="nav-toggle" aria-label="Menu openen" aria-expanded="false">☰</button>
     <nav class="main-nav">
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="muzikanten.html">Muzikanten</a></li>
-        <li><a href="repertoire.html">Repertoire</a></li>
-        <li><a href="kalender.html">Kalender</a></li>
-        <li><a href="media.html" aria-current="page">Beluister</a></li>
-        <li><a href="fotos.html">Foto's</a></li>
-        <li><a href="boeking.html">Boeking</a></li>
+        <li><a href="home.html" data-key="nav_home">Home</a></li>
+        <li><a href="muzikanten.html" data-key="nav_muzikanten">Muzikanten</a></li>
+        <li><a href="repertoire.html" data-key="nav_repertoire">Repertoire</a></li>
+        <li><a href="kalender.html" data-key="nav_kalender">Kalender</a></li>
+        <li><a href="media.html" aria-current="page" data-key="nav_media">Beluister</a></li>
+        <li><a href="fotos.html" data-key="nav_fotos">Foto's</a></li>
+        <li><a href="boeking.html" data-key="nav_boeking">Boeking</a></li>
       </ul>
     </nav>
   </div>
@@ -34,17 +34,17 @@
 
 <section class="page-hero">
   <div class="container">
-    <p class="eyebrow on-dark" style="justify-content:center;">Beeld &amp; geluid</p>
-    <h1>Beluister en bekijk Nikita Unbound</h1>
-    <p>Een greep uit onze live-registraties en studio-opnames, zodat u perfect weet wat u kan verwachten op uw feest.</p>
+    <p class="eyebrow on-dark" style="justify-content:center;" data-key="media_hero_eyebrow">Beeld &amp; geluid</p>
+    <h1 data-key="media_hero_title">Beluister en bekijk Nikita Unbound</h1>
+    <p data-key="media_hero_lead">Een greep uit onze live-registraties en studio-opnames, zodat u perfect weet wat u kan verwachten op uw feest.</p>
   </div>
 </section>
 
 <section class="section section-dark">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow on-dark">Video's</p>
-      <h2>Live in beeld</h2>
+      <p class="eyebrow on-dark" data-key="videos_eyebrow">Video's</p>
+      <h2 data-key="videos_title">Live in beeld</h2>
     </div>
     <div class="media-grid">
       <div class="video-card reveal">
@@ -52,8 +52,8 @@
           <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#D8B677" stroke-width="1.3" style="opacity:.7;"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8Z" fill="#D8B677" stroke="none"/></svg>
         </div>
         <div class="caption">
-          <h3>Live optreden — receptie</h3>
-          <p>Sfeerbeelden van een recente receptie.</p>
+          <h3 data-key="video1_title">Live optreden — receptie</h3>
+          <p data-key="video1_desc">Sfeerbeelden van een recente receptie.</p>
         </div>
       </div>
       <div class="video-card reveal">
@@ -61,57 +61,57 @@
           <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#D8B677" stroke-width="1.3" style="opacity:.7;"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8Z" fill="#D8B677" stroke="none"/></svg>
         </div>
         <div class="caption">
-          <h3>Akoestische sessie</h3>
-          <p>Intieme studio-opname van ons repertoire.</p>
+          <h3 data-key="video2_title">Akoestische sessie</h3>
+          <p data-key="video2_desc">Intieme studio-opname van ons repertoire.</p>
         </div>
       </div>
     </div>
-    <p class="media-placeholder-note">Dit zijn placeholders ter illustratie van de lay-out. Vervang elk placeholdervlak in <code>media.html</code> door een echte YouTube- of Vimeo-embed (<code>&lt;iframe&gt;</code>) van uw eigen beeldmateriaal.</p>
+    <p class="media-placeholder-note" data-key="videos_placeholder_note">Dit zijn placeholders ter illustratie van de lay-out. Vervang elk placeholdervlak in <code>media.html</code> door een echte YouTube- of Vimeo-embed (<code>&lt;iframe&gt;</code>) van uw eigen beeldmateriaal.</p>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">Opnames</p>
-      <h2>Beluister onze nummers</h2>
+      <p class="eyebrow" data-key="audio_eyebrow">Opnames</p>
+      <h2 data-key="audio_title">Beluister onze nummers</h2>
     </div>
-    <div class="audio-list">
+    <div class="audio-list" data-tracks-list>
       <div class="audio-card reveal">
         <div class="audio-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg></div>
         <div>
-          <h3>Fly Me to the Moon (akoestische versie)</h3>
-          <p class="meta">Studio-opname</p>
+          <h3 data-key="audio1_title">Fly Me to the Moon (akoestische versie)</h3>
+          <p class="meta" data-key="audio1_meta">Studio-opname</p>
           <audio controls src="assets/audio/fly-me-to-the-moon.mp3"></audio>
         </div>
       </div>
       <div class="audio-card reveal">
         <div class="audio-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg></div>
         <div>
-          <h3>Songbird</h3>
-          <p class="meta">Live registratie</p>
+          <h3 data-key="audio2_title">Songbird</h3>
+          <p class="meta" data-key="audio2_meta">Live registratie</p>
           <audio controls src="assets/audio/songbird.mp3"></audio>
         </div>
       </div>
       <div class="audio-card reveal">
         <div class="audio-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg></div>
         <div>
-          <h3>Ho Hey</h3>
-          <p class="meta">Studio-opname</p>
+          <h3 data-key="audio3_title">Ho Hey</h3>
+          <p class="meta" data-key="audio3_meta">Studio-opname</p>
           <audio controls src="assets/audio/ho-hey.mp3"></audio>
         </div>
       </div>
     </div>
-    <p class="media-placeholder-note">Voeg uw eigen MP3-bestanden toe in de map <code>assets/audio/</code> en verwijs ernaar in <code>media.html</code> om deze spelers te laten afspelen.</p>
+    <p class="media-placeholder-note" data-key="audio_placeholder_note">Voeg uw eigen MP3-bestanden toe in de map <code>assets/audio/</code> en verwijs ernaar in <code>media.html</code> om deze spelers te laten afspelen.</p>
   </div>
 </section>
 
 <section class="section section-deep section-tight">
   <div class="container">
     <div class="section-head center reveal">
-      <p class="eyebrow on-dark">Overtuigd?</p>
-      <h2>Boek Nikita Unbound voor uw feest</h2>
-      <a href="boeking.html" class="btn btn-gold mt-40">Naar boekingsinformatie</a>
+      <p class="eyebrow on-dark" data-key="media_cta_eyebrow">Overtuigd?</p>
+      <h2 data-key="media_cta_title">Boek Nikita Unbound voor uw feest</h2>
+      <a href="boeking.html" class="btn btn-gold mt-40" data-key="cta_boeking_btn">Naar boekingsinformatie</a>
     </div>
   </div>
 </section>
@@ -124,29 +124,29 @@
           <img src="assets/logo.jpg" alt="Nikita Unbound logo">
           <span>Nikita Unbound</span>
         </div>
-        <p>Sfeervolle akoestische muziek voor trouwrecepties, recepties, tuinfeesten en personeelsfeesten.</p>
+        <p data-key="footer_blurb">Sfeervolle akoestische muziek voor trouwrecepties, recepties, tuinfeesten en personeelsfeesten.</p>
       </div>
       <div class="footer-col">
-        <h4>Navigatie</h4>
+        <h4 data-key="footer_nav_heading">Navigatie</h4>
         <ul>
-          <li><a href="muzikanten.html">Muzikanten</a></li>
-          <li><a href="repertoire.html">Repertoire</a></li>
-          <li><a href="kalender.html">Kalender</a></li>
-          <li><a href="media.html">Beluister</a></li>
-          <li><a href="fotos.html">Foto's</a></li>
-          <li><a href="boeking.html">Boeking</a></li>
+          <li><a href="muzikanten.html" data-key="nav_muzikanten">Muzikanten</a></li>
+          <li><a href="repertoire.html" data-key="nav_repertoire">Repertoire</a></li>
+          <li><a href="kalender.html" data-key="nav_kalender">Kalender</a></li>
+          <li><a href="media.html" data-key="nav_media">Beluister</a></li>
+          <li><a href="fotos.html" data-key="nav_fotos">Foto's</a></li>
+          <li><a href="boeking.html" data-key="nav_boeking">Boeking</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Contact</h4>
-        <p>info@nikitaunbound.be</p>
-        <p>+32 470 00 00 00</p>
-        <p>Gent, België</p>
+        <h4 data-key="footer_contact_heading">Contact</h4>
+        <p data-key="footer_email">info@nikitaunbound.be</p>
+        <p data-key="footer_phone">+32 470 00 00 00</p>
+        <p data-key="footer_city">Gent, België</p>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© <span data-year></span> Nikita Unbound. Alle rechten voorbehouden.</span>
-      <span>Akoestisch • Intiem • Onbegrensd</span>
+      <span>© <span data-year></span> <span data-key="footer_copyright">Nikita Unbound. Alle rechten voorbehouden.</span></span>
+      <span data-key="footer_tagline">Akoestisch • Intiem • Onbegrensd</span>
       <a href="admin.html" style="opacity:.45;font-size:.78rem;">Beheer</a>
     </div>
   </div>

@@ -294,7 +294,7 @@ section .eyebrow.on-dark::before{ background: var(--gold-bright); }
 /* ---------- Musicians ---------- */
 .musicians{
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 48px;
 }
 .musician-card{
@@ -313,8 +313,17 @@ section .eyebrow.on-dark::before{ background: var(--gold-bright); }
   color: var(--navy-deep);
   position: relative;
 }
-.musician-portrait.nikita{ background: linear-gradient(150deg, var(--terracotta), #e0a488 60%, var(--sage)); }
-.musician-portrait.jan{ background: linear-gradient(150deg, var(--sage), #a9c7bf 55%, var(--gold)); }
+.musician-portrait.nikita, .musician-portrait.variant-1{ background: linear-gradient(150deg, var(--terracotta), #e0a488 60%, var(--sage)); }
+.musician-portrait.jan, .musician-portrait.variant-2{ background: linear-gradient(150deg, var(--sage), #a9c7bf 55%, var(--gold)); }
+.musician-portrait.variant-3{ background: linear-gradient(150deg, var(--gold), #e8cc98 55%, var(--terracotta)); }
+.musician-portrait.variant-4{ background: linear-gradient(150deg, #8fa8c9, var(--sage) 55%, var(--gold)); }
+.musician-portrait img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .musician-body{ padding: 30px 32px 36px; }
 .musician-role{
   font-size: .74rem;
@@ -721,6 +730,85 @@ form.is-submitted .form-fields{ display: none; }
 html.js .reveal{ opacity: 0; transform: translateY(18px); }
 html.js .reveal.is-visible{ opacity: 1; transform: translateY(0); }
 
+/* =========================================================
+   SPLASHPAGINA — de eerste pagina van de website (index.html)
+   ========================================================= */
+body.splash-page{ margin: 0; }
+
+.splash-gate{
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(120% 140% at 50% 30%, #1a3057 0%, var(--navy) 45%, var(--navy-deep) 100%);
+  padding: 40px 24px;
+}
+
+.splash-inner{
+  text-align: center;
+  max-width: 520px;
+  animation: splash-fade-in 1s ease both;
+}
+@keyframes splash-fade-in{
+  from{ opacity: 0; transform: translateY(14px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+.splash-wordmark{ margin-bottom: 6px; }
+.splash-title{
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 11vw, 5.6rem);
+  color: var(--gold-bright);
+  letter-spacing: .04em;
+  line-height: 1;
+}
+.splash-subtitle{
+  display: block;
+  font-family: var(--font-body);
+  font-size: clamp(.85rem, 2vw, 1.05rem);
+  letter-spacing: .5em;
+  color: var(--gold);
+  font-weight: 500;
+  margin-top: 12px;
+  padding-left: .5em; /* optisch centreren t.o.v. de letter-spacing */
+}
+
+.splash-feather{
+  width: 92px;
+  height: auto;
+  margin: 36px auto 40px;
+  filter: drop-shadow(0 18px 30px rgba(0,0,0,.4));
+  animation: splash-feather-float 5s ease-in-out infinite;
+}
+@keyframes splash-feather-float{
+  0%, 100%{ transform: translateY(0); }
+  50%{ transform: translateY(-8px); }
+}
+
+.splash-enter-link{
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.6vw, 1.4rem);
+  color: var(--cream);
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(216,182,119,.4);
+  transition: color var(--transition), border-color var(--transition), gap var(--transition);
+}
+.splash-enter-link:hover{
+  color: var(--gold-bright);
+  border-color: var(--gold-bright);
+  gap: 18px;
+}
+.splash-enter-arrow{ width: 20px; height: 20px; flex-shrink: 0; }
+
+@media (max-width: 480px){
+  .splash-feather{ width: 68px; margin: 26px auto 30px; }
+}
+
 /* ---------- utility ---------- */
 .mt-40{ margin-top: 40px; }
 .text-center{ text-align: center; }
@@ -805,6 +893,39 @@ html.js .reveal.is-visible{ opacity: 1; transform: translateY(0); }
 .tab-btn.is-active{ color: var(--navy); border-bottom-color: var(--terracotta); }
 
 .admin-text-fields{ display: flex; flex-direction: column; gap: 30px; max-width: 720px; }
+
+.admin-text-groups{ max-width: 720px; display: flex; flex-direction: column; gap: 14px; }
+.admin-text-group{
+  border: 1px solid rgba(16,32,58,.12);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.admin-text-group summary{
+  cursor: pointer;
+  padding: 16px 22px;
+  background: rgba(16,32,58,.03);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--navy);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.admin-text-group summary::-webkit-details-marker{ display: none; }
+.admin-text-group summary::after{
+  content: "+";
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  color: var(--terracotta);
+  transition: transform var(--transition);
+}
+.admin-text-group[open] summary::after{ content: "−"; }
+.admin-text-group .admin-text-fields{
+  padding: 26px 22px 30px;
+  max-width: none;
+  margin: 0;
+}
 .admin-text-field label{
   display: block;
   font-size: .82rem;
@@ -893,3 +1014,58 @@ html.js .reveal.is-visible{ opacity: 1; transform: translateY(0); }
 .admin-list-row .row-title{ flex: 1.4; min-width: 160px; }
 .admin-list-row .row-location, .admin-list-row .row-artist{ flex: 1; min-width: 140px; }
 .admin-list-row .btn{ padding: 8px 16px; font-size: .74rem; }
+
+.musician-thumb{
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(16,32,58,.15);
+  flex-shrink: 0;
+  background: var(--cream-dim);
+}
+.musician-thumb-placeholder{
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px dashed rgba(16,32,58,.25);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: #98a2ae;
+  background: var(--cream-dim);
+}
+.musician-photo-input{ max-width: 220px; }
+
+.photo-position-editor{
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+.photo-position-editor.is-active{ display: flex; }
+.photo-position-frame{
+  position: relative;
+  width: 180px;
+  aspect-ratio: 4/3.4;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(16,32,58,.2);
+  cursor: grab;
+  background: var(--cream-dim);
+  touch-action: none;
+  user-select: none;
+}
+.photo-position-frame:active{ cursor: grabbing; }
+.photo-position-frame img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.photo-position-hint{ font-size: .74rem; color: #667; }

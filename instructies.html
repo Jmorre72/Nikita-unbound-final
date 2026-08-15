@@ -12,7 +12,7 @@
 
 <header class="site-header">
   <div class="container">
-    <a href="index.html" class="brand">
+    <a href="home.html" class="brand">
       <img src="assets/logo.jpg" alt="Nikita Unbound logo">
       <span class="brand-word">Nikita<br><small>Unbound</small></span>
     </a>
@@ -30,6 +30,9 @@
 
 <section class="section">
   <div class="container">
+    <div class="trio-note" style="border-color: rgba(16,32,58,.15); color: var(--navy); margin-bottom: 40px;">
+      <strong>Belangrijk onderscheid:</strong> Supabase (hieronder) is enkel de "achterkant" — database, login en foto-opslag. De website zelf (deze bestanden) moet je apart hosten. Geen idee waar? Zie de sectie <strong>"Website hosten"</strong> onderaan deze pagina — dat doe je in een paar minuten, gratis, zonder technische kennis.
+    </div>
     <div class="steps-list">
 
       <div class="step-item">
@@ -68,9 +71,11 @@
         <div class="step-num"></div>
         <div>
           <h3>Koppel de website aan je project</h3>
-          <p>Ga naar <strong>Project Settings → API</strong>. Kopieer de <strong>Project URL</strong> en de <strong>anon public</strong> key. Open het bestand <code>js/supabase-config.js</code> in de websitebestanden en vul beide waarden in tussen de aanhalingstekens:</p>
-          <pre style="background:#10203A;color:#F6EEE0;padding:18px 20px;border-radius:4px;font-size:.85rem;overflow-x:auto;">window.SUPABASE_URL = "https://jouw-project.supabase.co";
-window.SUPABASE_ANON_KEY = "jouw-anon-public-key";</pre>
+          <p>Ga naar <strong>Project Settings → Data API</strong> (soms kortweg "API" genoemd — niet "API Keys"). Daar vind je bovenaan de <strong>Project URL</strong>. Weet je het tabblad niet meteen te vinden? De Project URL is altijd op te bouwen uit het project-ID dat in de adresbalk van je dashboard staat: <code>https://project-id.supabase.co</code>.</p>
+          <p>Ga vervolgens naar <strong>Project Settings → API Keys</strong> voor de sleutel. Oudere projecten tonen <strong>anon public</strong>, nieuwere projecten tonen een <strong>publishable key</strong> (begint met <code>sb_publishable_</code>) — beide werken, kopieer welke je ziet staan.</p>
+          <p>Open het bestand <code>js/supabase-config.js</code> in de websitebestanden en vul beide waarden in tussen de aanhalingstekens:</p>
+          <pre style="background:#10203A;color:#F6EEE0;padding:18px 20px;border-radius:4px;font-size:.85rem;overflow-x:auto;">window.SUPABASE_URL = "https://jouw-project-id.supabase.co";
+window.SUPABASE_ANON_KEY = "jouw-anon-public-of-publishable-key";</pre>
           <p class="field-hint">Bewaar het bestand en upload het (samen met de rest van de site) naar je webhosting. Dit is de enige stap die je moet herhalen als je ooit van hostingpartij wisselt.</p>
         </div>
       </div>
@@ -86,7 +91,99 @@ window.SUPABASE_ANON_KEY = "jouw-anon-public-key";</pre>
     </div>
 
     <div class="trio-note mt-40" style="border-color: rgba(16,32,58,.15); color: var(--navy);">
-      <strong>Nog geen webhosting?</strong> Omdat Supabase de volledige achterkant (login, database, foto-opslag) voor zijn rekening neemt, volstaat de goedkoopste of zelfs gratis hosting voor de website zelf (bijvoorbeeld Netlify, GitHub Pages, of gewone hosting bij Combell/One.com). Vraag het gerust als je hulp wil bij het kiezen of instellen daarvan.
+      <strong>Nog geen webhosting?</strong> Omdat Supabase de volledige achterkant (login, database, foto-opslag) voor zijn rekening neemt, volstaat de goedkoopste of zelfs gratis hosting voor de website zelf (bijvoorbeeld Cloudflare Pages, Netlify, of gewone hosting bij Combell/One.com). Vraag het gerust als je hulp wil bij het kiezen of instellen daarvan.
+    </div>
+  </div>
+</section>
+
+<section class="section section-dark" id="boekingsformulier">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow on-dark">Optioneel, maar aanbevolen</p>
+      <h2>Boekingsformulier naar je e-mail sturen</h2>
+      <p class="lead-text">Zonder deze stap toont het boekingsformulier wel een bevestiging aan de bezoeker, maar krijg jij zelf niets binnen. Met deze gratis koppeling (Web3Forms) komt elke aanvraag rechtstreeks in je mailbox terecht — zonder eigen server.</p>
+    </div>
+    <div class="steps-list">
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Maak een gratis toegangssleutel aan</h3>
+          <p>Ga naar <strong>web3forms.com</strong> en klik op <strong>"Create Access Key"</strong>. Vul het e-mailadres in waarop je de aanvragen wil ontvangen (bv. <code>jan.morre@skynet.be</code>) en verstuur.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Bevestig je e-mailadres</h3>
+          <p>Je krijgt meteen een e-mail van Web3Forms met daarin je persoonlijke <strong>Access Key</strong> (een lange code). Bewaar die.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Vul de sleutel in op de website</h3>
+          <p>Open het bestand <code>js/web3forms-config.js</code> in de websitebestanden en plak je sleutel tussen de aanhalingstekens:</p>
+          <pre style="background:#10203A;color:#F6EEE0;padding:18px 20px;border-radius:4px;font-size:.85rem;overflow-x:auto;">window.WEB3FORMS_ACCESS_KEY = "jouw-access-key-hier";</pre>
+          <p class="field-hint">Bewaar het bestand en upload de website opnieuw. Deze sleutel mag gerust zichtbaar in de code staan — het is geen geheime wachtwoordsleutel, enkel een adreslabel dat naar jouw mailbox verwijst.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Test het formulier</h3>
+          <p>Ga naar de boekingspagina van je live website en verstuur een testaanvraag. Die zou binnen enkele seconden in je mailbox moeten toekomen (kijk ook even bij ongewenste mail/spam bij de eerste test).</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section section-dark" id="hosting">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow on-dark">Website hosten</p>
+      <h2>Je site online zetten met Netlify (gratis)</h2>
+      <p class="lead-text">Dit is los van Supabase — dit zet de websitebestanden zelf online, zodat ze wereldwijd bereikbaar zijn.</p>
+    </div>
+    <div class="steps-list">
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Maak een gratis Netlify-account</h3>
+          <p>Ga naar <strong>app.netlify.com</strong> en meld je aan, bijvoorbeeld met je Google-account.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Sleep je websitemap naar Netlify</h3>
+          <p>Op het startscherm zie je een vak <strong>"Deploy manually"</strong>. Sleep daar de volledige map met je websitebestanden (met daarin <code>index.html</code>, <code>css</code>, <code>js</code>, <code>assets</code>, ...) naartoe.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Je site staat meteen online</h3>
+          <p>Na een paar seconden krijg je een adres zoals <code>https://nikita-unbound-a1b2c3.netlify.app</code> — meteen bereikbaar voor iedereen. Een eigen domeinnaam (bv. nikitaunbound.be) kan je later nog koppelen via "Domain settings" in Netlify.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Bij elke wijziging: opnieuw slepen</h3>
+          <p>Pas je later een bestand aan (bijvoorbeeld <code>js/supabase-config.js</code> na het instellen van Supabase hieronder), sleep dan gewoon de volledige map opnieuw naar hetzelfde Netlify-project. Dat vervangt de oude versie in enkele seconden.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>

@@ -13,20 +13,20 @@
 
 <header class="site-header">
   <div class="container">
-    <a href="index.html" class="brand">
+    <a href="home.html" class="brand">
       <img src="assets/logo.jpg" alt="Nikita Unbound logo">
       <span class="brand-word">Nikita<br><small>Unbound</small></span>
     </a>
     <button class="nav-toggle" aria-label="Menu openen" aria-expanded="false">☰</button>
     <nav class="main-nav">
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="muzikanten.html">Muzikanten</a></li>
-        <li><a href="repertoire.html">Repertoire</a></li>
-        <li><a href="kalender.html">Kalender</a></li>
-        <li><a href="media.html">Beluister</a></li>
-        <li><a href="fotos.html">Foto's</a></li>
-        <li><a href="boeking.html" aria-current="page">Boeking</a></li>
+        <li><a href="home.html" data-key="nav_home">Home</a></li>
+        <li><a href="muzikanten.html" data-key="nav_muzikanten">Muzikanten</a></li>
+        <li><a href="repertoire.html" data-key="nav_repertoire">Repertoire</a></li>
+        <li><a href="kalender.html" data-key="nav_kalender">Kalender</a></li>
+        <li><a href="media.html" data-key="nav_media">Beluister</a></li>
+        <li><a href="fotos.html" data-key="nav_fotos">Foto's</a></li>
+        <li><a href="boeking.html" aria-current="page" data-key="nav_boeking">Boeking</a></li>
       </ul>
     </nav>
   </div>
@@ -34,9 +34,9 @@
 
 <section class="page-hero">
   <div class="container">
-    <p class="eyebrow on-dark" style="justify-content:center;">Boeking</p>
-    <h1>Boek Nikita Unbound voor uw feest</h1>
-    <p>Van een eerste vraag tot de dag van uw evenement — dit is hoe een boeking bij ons verloopt, en alle info die u vooraf wil weten.</p>
+    <p class="eyebrow on-dark" style="justify-content:center;" data-key="boek_hero_eyebrow">Boeking</p>
+    <h1 data-key="boek_hero_title">Boek Nikita Unbound voor uw feest</h1>
+    <p data-key="boek_hero_lead">Van een eerste vraag tot de dag van uw evenement — dit is hoe een boeking bij ons verloopt, en alle info die u vooraf wil weten.</p>
   </div>
 </section>
 
@@ -44,19 +44,19 @@
   <div class="container">
     <div class="info-grid">
       <div class="info-card reveal">
-        <div class="num">2</div>
-        <h3>Bezetting</h3>
-        <p>Zang en percussie, akoestisch en intiem — ideaal voor kleinere en middelgrote ruimtes, binnen of buiten.</p>
+        <div class="num" data-key="info_card1_num">2</div>
+        <h3 data-key="info_card1_title">Bezetting</h3>
+        <p data-key="info_card1_desc">Zang en percussie, akoestisch en intiem — ideaal voor kleinere en middelgrote ruimtes, binnen of buiten.</p>
       </div>
       <div class="info-card reveal">
-        <div class="num">±45'</div>
-        <h3>Speelduur per set</h3>
-        <p>Sets op maat van uw programma, met pauzes voor speeches of ander vermaak. In overleg samen te stellen.</p>
+        <div class="num" data-key="info_card2_num">±45'</div>
+        <h3 data-key="info_card2_title">Speelduur per set</h3>
+        <p data-key="info_card2_desc">Sets op maat van uw programma, met pauzes voor speeches of ander vermaak. In overleg samen te stellen.</p>
       </div>
       <div class="info-card reveal">
-        <div class="num">±60'</div>
-        <h3>Opbouw &amp; soundcheck</h3>
-        <p>Wij komen ruim op tijd voor een discrete opbouw en soundcheck, afgestemd op de locatie.</p>
+        <div class="num" data-key="info_card3_num">±60'</div>
+        <h3 data-key="info_card3_title">Opbouw &amp; soundcheck</h3>
+        <p data-key="info_card3_desc">Wij komen ruim op tijd voor een discrete opbouw en soundcheck, afgestemd op de locatie.</p>
       </div>
     </div>
   </div>
@@ -65,25 +65,25 @@
 <section class="section">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">Hoe verloopt een boeking</p>
-      <h2>In vier stappen naar uw optreden</h2>
+      <p class="eyebrow" data-key="steps_eyebrow">Hoe verloopt een boeking</p>
+      <h2 data-key="steps_title">In vier stappen naar uw optreden</h2>
     </div>
     <div class="steps-list">
       <div class="step-item reveal">
         <div class="step-num"></div>
-        <div><h3>Aanvraag versturen</h3><p>Vul het formulier hieronder in met de datum, locatie en aard van uw evenement.</p></div>
+        <div><h3 data-key="step1_title">Aanvraag versturen</h3><p data-key="step1_desc">Vul het formulier hieronder in met de datum, locatie en aard van uw evenement.</p></div>
       </div>
       <div class="step-item reveal">
         <div class="step-num"></div>
-        <div><h3>Persoonlijk contact</h3><p>Wij nemen binnen enkele dagen contact op om details en wensen te bespreken.</p></div>
+        <div><h3 data-key="step2_title">Persoonlijk contact</h3><p data-key="step2_desc">Wij nemen binnen enkele dagen contact op om details en wensen te bespreken.</p></div>
       </div>
       <div class="step-item reveal">
         <div class="step-num"></div>
-        <div><h3>Bevestiging &amp; nummerkeuze</h3><p>Na bevestiging kan u via de repertoirepagina uw favoriete nummers selecteren of een verzoeknummer aanvragen.</p></div>
+        <div><h3 data-key="step3_title">Bevestiging &amp; nummerkeuze</h3><p data-key="step3_desc">Na bevestiging kan u via de repertoirepagina uw favoriete nummers selecteren of een verzoeknummer aanvragen.</p></div>
       </div>
       <div class="step-item reveal">
         <div class="step-num"></div>
-        <div><h3>Wij komen spelen</h3><p>Op de dag zelf zorgen wij voor een discrete opbouw en een sfeervol optreden op maat.</p></div>
+        <div><h3 data-key="step4_title">Wij komen spelen</h3><p data-key="step4_desc">Op de dag zelf zorgen wij voor een discrete opbouw en een sfeervol optreden op maat.</p></div>
       </div>
     </div>
   </div>
@@ -92,12 +92,15 @@
 <section id="aanvraagformulier" class="section section-dark">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow on-dark">Informatie aanvragen</p>
-      <h2>Vertel ons over uw feest</h2>
+      <p class="eyebrow on-dark" data-key="boek_form_eyebrow">Informatie aanvragen</p>
+      <h2 data-key="boek_form_title">Vertel ons over uw feest</h2>
       <p class="lead-text" data-key="booking_lede">Vul onderstaand formulier in en we bezorgen u vrijblijvend meer informatie of een offerte op maat.</p>
     </div>
 
-    <form data-validate class="reveal" novalidate>
+    <form data-validate data-web3forms class="reveal" novalidate>
+      <input type="hidden" name="subject" value="Nieuwe boekingsaanvraag — Nikita Unbound">
+      <input type="hidden" name="from_name" value="Nikita Unbound — website">
+      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
       <div class="form-fields">
         <div class="form-grid">
           <div class="field">
@@ -144,10 +147,11 @@
             <textarea id="bericht" name="bericht" placeholder="Vertel ons meer over uw feest, gewenste speelduur, sfeer, ..."></textarea>
           </div>
         </div>
-        <button type="submit" class="btn btn-gold mt-40">Verstuur aanvraag</button>
-        <p class="form-note">We behandelen uw gegevens vertrouwelijk en gebruiken ze uitsluitend om uw aanvraag te beantwoorden.</p>
+        <button type="submit" class="btn btn-gold mt-40" data-key="boek_submit_btn">Verstuur aanvraag</button>
+        <p class="form-note" data-key="boek_form_note">We behandelen uw gegevens vertrouwelijk en gebruiken ze uitsluitend om uw aanvraag te beantwoorden.</p>
+        <p class="form-send-error field-error" style="display:none;"></p>
       </div>
-      <p class="form-success">Bedankt voor uw aanvraag! We nemen binnenkort contact met u op.</p>
+      <p class="form-success" data-key="boek_success_msg">Bedankt voor uw aanvraag! We nemen binnenkort contact met u op.</p>
     </form>
   </div>
 </section>
@@ -160,29 +164,29 @@
           <img src="assets/logo.jpg" alt="Nikita Unbound logo">
           <span>Nikita Unbound</span>
         </div>
-        <p>Sfeervolle akoestische muziek voor trouwrecepties, recepties, tuinfeesten en personeelsfeesten.</p>
+        <p data-key="footer_blurb">Sfeervolle akoestische muziek voor trouwrecepties, recepties, tuinfeesten en personeelsfeesten.</p>
       </div>
       <div class="footer-col">
-        <h4>Navigatie</h4>
+        <h4 data-key="footer_nav_heading">Navigatie</h4>
         <ul>
-          <li><a href="muzikanten.html">Muzikanten</a></li>
-          <li><a href="repertoire.html">Repertoire</a></li>
-          <li><a href="kalender.html">Kalender</a></li>
-          <li><a href="media.html">Beluister</a></li>
-          <li><a href="fotos.html">Foto's</a></li>
-          <li><a href="boeking.html">Boeking</a></li>
+          <li><a href="muzikanten.html" data-key="nav_muzikanten">Muzikanten</a></li>
+          <li><a href="repertoire.html" data-key="nav_repertoire">Repertoire</a></li>
+          <li><a href="kalender.html" data-key="nav_kalender">Kalender</a></li>
+          <li><a href="media.html" data-key="nav_media">Beluister</a></li>
+          <li><a href="fotos.html" data-key="nav_fotos">Foto's</a></li>
+          <li><a href="boeking.html" data-key="nav_boeking">Boeking</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Contact</h4>
-        <p>info@nikitaunbound.be</p>
-        <p>+32 470 00 00 00</p>
-        <p>Gent, België</p>
+        <h4 data-key="footer_contact_heading">Contact</h4>
+        <p data-key="footer_email">info@nikitaunbound.be</p>
+        <p data-key="footer_phone">+32 470 00 00 00</p>
+        <p data-key="footer_city">Gent, België</p>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© <span data-year></span> Nikita Unbound. Alle rechten voorbehouden.</span>
-      <span>Akoestisch • Intiem • Onbegrensd</span>
+      <span>© <span data-year></span> <span data-key="footer_copyright">Nikita Unbound. Alle rechten voorbehouden.</span></span>
+      <span data-key="footer_tagline">Akoestisch • Intiem • Onbegrensd</span>
       <a href="admin.html" style="opacity:.45;font-size:.78rem;">Beheer</a>
     </div>
   </div>
@@ -192,6 +196,7 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/content.js"></script>
+<script src="js/web3forms-config.js"></script>
 <script src="js/script.js"></script>
 </body>
 </html>

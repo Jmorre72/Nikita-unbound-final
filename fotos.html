@@ -13,20 +13,20 @@
 
 <header class="site-header">
   <div class="container">
-    <a href="index.html" class="brand">
+    <a href="home.html" class="brand">
       <img src="assets/logo.jpg" alt="Nikita Unbound logo">
       <span class="brand-word">Nikita<br><small>Unbound</small></span>
     </a>
     <button class="nav-toggle" aria-label="Menu openen" aria-expanded="false">☰</button>
     <nav class="main-nav">
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="muzikanten.html">Muzikanten</a></li>
-        <li><a href="repertoire.html">Repertoire</a></li>
-        <li><a href="kalender.html">Kalender</a></li>
-        <li><a href="media.html">Beluister</a></li>
-        <li><a href="fotos.html" aria-current="page">Foto's</a></li>
-        <li><a href="boeking.html">Boeking</a></li>
+        <li><a href="home.html" data-key="nav_home">Home</a></li>
+        <li><a href="muzikanten.html" data-key="nav_muzikanten">Muzikanten</a></li>
+        <li><a href="repertoire.html" data-key="nav_repertoire">Repertoire</a></li>
+        <li><a href="kalender.html" data-key="nav_kalender">Kalender</a></li>
+        <li><a href="media.html" data-key="nav_media">Beluister</a></li>
+        <li><a href="fotos.html" aria-current="page" data-key="nav_fotos">Foto's</a></li>
+        <li><a href="boeking.html" data-key="nav_boeking">Boeking</a></li>
       </ul>
     </nav>
   </div>
@@ -34,9 +34,9 @@
 
 <section class="page-hero">
   <div class="container">
-    <p class="eyebrow on-dark" style="justify-content:center;">Foto's</p>
-    <h1>Momenten in beeld</h1>
-    <p>Een sfeerbeeld van Nikita Unbound op locatie en achter de schermen.</p>
+    <p class="eyebrow on-dark" style="justify-content:center;" data-key="fotos_hero_eyebrow">Foto's</p>
+    <h1 data-key="fotos_hero_title">Momenten in beeld</h1>
+    <p data-key="fotos_hero_lead">Een sfeerbeeld van Nikita Unbound op locatie en achter de schermen.</p>
   </div>
 </section>
 
@@ -54,7 +54,7 @@
       <div class="g-item"><div class="g-placeholder">Foto<br>percussie</div></div>
       <div class="g-item"><div class="g-placeholder">Foto<br>avondsfeer</div></div>
     </div>
-    <p class="media-placeholder-note">De vakken met tekst zijn placeholders. Vervang deze in <code>fotos.html</code> door eigen foto's: voeg de bestanden toe aan <code>assets/</code> en verwijs ernaar met een <code>&lt;img&gt;</code>-tag, zoals bij de eerste foto.</p>
+    <p class="media-placeholder-note" data-key="fotos_placeholder_note">De vakken met tekst zijn placeholders. Vervang deze in <code>fotos.html</code> door eigen foto's: voeg de bestanden toe aan <code>assets/</code> en verwijs ernaar met een <code>&lt;img&gt;</code>-tag, zoals bij de eerste foto.</p>
   </div>
 </section>
 
@@ -66,9 +66,9 @@
 <section class="section section-tight">
   <div class="container">
     <div class="section-head center reveal">
-      <p class="eyebrow">Zelf meemaken?</p>
-      <h2>Boek Nikita Unbound voor uw feest</h2>
-      <a href="boeking.html" class="btn btn-outline-dark mt-40">Naar boekingsinformatie</a>
+      <p class="eyebrow" data-key="fotos_cta_eyebrow">Zelf meemaken?</p>
+      <h2 data-key="fotos_cta_title">Boek Nikita Unbound voor uw feest</h2>
+      <a href="boeking.html" class="btn btn-outline-dark mt-40" data-key="cta_boeking_btn">Naar boekingsinformatie</a>
     </div>
   </div>
 </section>
@@ -81,29 +81,29 @@
           <img src="assets/logo.jpg" alt="Nikita Unbound logo">
           <span>Nikita Unbound</span>
         </div>
-        <p>Sfeervolle akoestische muziek voor trouwrecepties, recepties, tuinfeesten en personeelsfeesten.</p>
+        <p data-key="footer_blurb">Sfeervolle akoestische muziek voor trouwrecepties, recepties, tuinfeesten en personeelsfeesten.</p>
       </div>
       <div class="footer-col">
-        <h4>Navigatie</h4>
+        <h4 data-key="footer_nav_heading">Navigatie</h4>
         <ul>
-          <li><a href="muzikanten.html">Muzikanten</a></li>
-          <li><a href="repertoire.html">Repertoire</a></li>
-          <li><a href="kalender.html">Kalender</a></li>
-          <li><a href="media.html">Beluister</a></li>
-          <li><a href="fotos.html">Foto's</a></li>
-          <li><a href="boeking.html">Boeking</a></li>
+          <li><a href="muzikanten.html" data-key="nav_muzikanten">Muzikanten</a></li>
+          <li><a href="repertoire.html" data-key="nav_repertoire">Repertoire</a></li>
+          <li><a href="kalender.html" data-key="nav_kalender">Kalender</a></li>
+          <li><a href="media.html" data-key="nav_media">Beluister</a></li>
+          <li><a href="fotos.html" data-key="nav_fotos">Foto's</a></li>
+          <li><a href="boeking.html" data-key="nav_boeking">Boeking</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Contact</h4>
-        <p>info@nikitaunbound.be</p>
-        <p>+32 470 00 00 00</p>
-        <p>Gent, België</p>
+        <h4 data-key="footer_contact_heading">Contact</h4>
+        <p data-key="footer_email">info@nikitaunbound.be</p>
+        <p data-key="footer_phone">+32 470 00 00 00</p>
+        <p data-key="footer_city">Gent, België</p>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© <span data-year></span> Nikita Unbound. Alle rechten voorbehouden.</span>
-      <span>Akoestisch • Intiem • Onbegrensd</span>
+      <span>© <span data-year></span> <span data-key="footer_copyright">Nikita Unbound. Alle rechten voorbehouden.</span></span>
+      <span data-key="footer_tagline">Akoestisch • Intiem • Onbegrensd</span>
       <a href="admin.html" style="opacity:.45;font-size:.78rem;">Beheer</a>
     </div>
   </div>
