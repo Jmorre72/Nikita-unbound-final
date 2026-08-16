@@ -132,5 +132,7 @@ window.TEXT_FIELDS = [
   { key: 'footer_email', page: 'Footer (overal)', label: 'E-mailadres', type: 'text' },
   { key: 'footer_phone', page: 'Footer (overal)', label: 'Telefoonnummer', type: 'text' },
   { key: 'footer_city', page: 'Footer (overal)', label: 'Stad/land', type: 'text' },
+  { key: 'social_instagram_url', page: 'Footer (overal)', label: 'Instagram-link', type: 'text' },
+  { key: 'social_facebook_url', page: 'Footer (overal)', label: 'Facebook-link', type: 'text' },
   { key: 'footer_slogan', page: 'Footer (overal)', label: 'Slagzin rechts onderaan', type: 'text' },
 ];

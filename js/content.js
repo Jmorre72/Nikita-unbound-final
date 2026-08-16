@@ -4,6 +4,10 @@
    uit de Supabase-tabel "site_texts". Is Supabase niet
    gekoppeld (of nog leeg), dan blijft gewoon de standaardtekst
    staan die al in de HTML zit — de site werkt dus altijd.
+
+   Elementen met een extra data-key-target="href" (bv. social
+   media-iconen) krijgen de waarde als attribuut in plaats van
+   als tekst, en worden automatisch verborgen zolang die leeg is.
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -21,7 +25,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.querySelectorAll('[data-key]').forEach(el => {
       const key = el.dataset.key;
-      if (map[key] !== undefined) {
+      if (map[key] === undefined) return;
+
+      const target = el.dataset.keyTarget;
+      if (target) {
+        const value = (map[key] || '').trim();
+        if (value) {
+          el.setAttribute(target, value);
+          el.hidden = false;
+        } else {
+          el.hidden = true;
+        }
+      } else {
         el.innerHTML = map[key];
       }
     });

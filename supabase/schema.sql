@@ -148,6 +148,8 @@ insert into site_texts (key, value) values
   ('footer_email', 'info@nikitaunbound.be'),
   ('footer_phone', '+32 470 00 00 00'),
   ('footer_city', 'Gent, België'),
+  ('social_instagram_url', ''),
+  ('social_facebook_url', ''),
   ('footer_copyright', 'Nikita Unbound. Alle rechten voorbehouden.'),
   ('footer_tagline', 'Akoestisch • Intiem • Onbegrensd'),
   ('splash_cta', 'Kom binnen, en ontdek Nikita Unbound.'),
