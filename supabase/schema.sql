@@ -30,6 +30,17 @@ create table if not exists tracks (
   created_at timestamptz not null default now()
 );
 
+-- ---------- Video's ----------
+create table if not exists videos (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  description text default '',
+  source_type text not null default 'embed', -- 'embed' (YouTube/Vimeo-link) of 'upload' (eigen bestand)
+  video_url text not null,
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now()
+);
+
 -- ---------- Optredens / kalender ----------
 create table if not exists gigs (
   id uuid primary key default gen_random_uuid(),
@@ -60,6 +71,7 @@ alter table photos enable row level security;
 alter table gigs enable row level security;
 alter table songs enable row level security;
 alter table tracks enable row level security;
+alter table videos enable row level security;
 
 -- Lezen: iedereen (ook niet-ingelogde bezoekers van de website)
 drop policy if exists "Publiek lezen - site_texts" on site_texts;
@@ -72,6 +84,8 @@ drop policy if exists "Publiek lezen - songs" on songs;
 create policy "Publiek lezen - songs" on songs for select using (true);
 drop policy if exists "Publiek lezen - tracks" on tracks;
 create policy "Publiek lezen - tracks" on tracks for select using (true);
+drop policy if exists "Publiek lezen - videos" on videos;
+create policy "Publiek lezen - videos" on videos for select using (true);
 
 -- Schrijven: enkel ingelogde gebruikers (de beheerder)
 drop policy if exists "Beheerder schrijft - site_texts insert" on site_texts;
@@ -94,6 +108,13 @@ drop policy if exists "Beheerder schrijft - tracks update" on tracks;
 create policy "Beheerder schrijft - tracks update" on tracks for update to authenticated using (true);
 drop policy if exists "Beheerder schrijft - tracks delete" on tracks;
 create policy "Beheerder schrijft - tracks delete" on tracks for delete to authenticated using (true);
+
+drop policy if exists "Beheerder schrijft - videos insert" on videos;
+create policy "Beheerder schrijft - videos insert" on videos for insert to authenticated with check (true);
+drop policy if exists "Beheerder schrijft - videos update" on videos;
+create policy "Beheerder schrijft - videos update" on videos for update to authenticated using (true);
+drop policy if exists "Beheerder schrijft - videos delete" on videos;
+create policy "Beheerder schrijft - videos delete" on videos for delete to authenticated using (true);
 
 drop policy if exists "Beheerder schrijft - gigs insert" on gigs;
 create policy "Beheerder schrijft - gigs insert" on gigs for insert to authenticated with check (true);
@@ -214,11 +235,6 @@ insert into site_texts (key, value) values
   ('media_hero_lead', 'Een greep uit onze live-registraties en studio-opnames, zodat u perfect weet wat u kan verwachten op uw feest.'),
   ('videos_eyebrow', 'Video''s'),
   ('videos_title', 'Live in beeld'),
-  ('video1_title', 'Live optreden — receptie'),
-  ('video1_desc', 'Sfeerbeelden van een recente receptie.'),
-  ('video2_title', 'Akoestische sessie'),
-  ('video2_desc', 'Intieme studio-opname van ons repertoire.'),
-  ('videos_placeholder_note', 'Dit zijn placeholders ter illustratie van de lay-out. Vervang elk placeholdervlak in media.html door een echte YouTube- of Vimeo-embed (<iframe>) van uw eigen beeldmateriaal.'),
   ('audio_eyebrow', 'Opnames'),
   ('audio_title', 'Beluister onze nummers'),
   ('audio1_title', 'Fly Me to the Moon (akoestische versie)'),
@@ -382,3 +398,32 @@ create policy "Beheerder verwijdert - storage audio"
 on storage.objects for delete
 to authenticated
 using ( bucket_id = 'audio' );
+
+-- =========================================================
+-- Videobestanden opslag (bucket "videos")
+-- Maak deze zelf aan: Storage → New bucket → naam "videos" →
+-- Public bucket: AAN. Enkel nodig als je zelf video-bestanden
+-- wil uploaden — bij een YouTube/Vimeo-link is dit niet nodig.
+-- =========================================================
+drop policy if exists "Publiek lezen - storage videos" on storage.objects;
+create policy "Publiek lezen - storage videos"
+on storage.objects for select
+using ( bucket_id = 'videos' );
+
+drop policy if exists "Beheerder upload - storage videos" on storage.objects;
+create policy "Beheerder upload - storage videos"
+on storage.objects for insert
+to authenticated
+with check ( bucket_id = 'videos' );
+
+drop policy if exists "Beheerder update - storage videos" on storage.objects;
+create policy "Beheerder update - storage videos"
+on storage.objects for update
+to authenticated
+using ( bucket_id = 'videos' );
+
+drop policy if exists "Beheerder verwijdert - storage videos" on storage.objects;
+create policy "Beheerder verwijdert - storage videos"
+on storage.objects for delete
+to authenticated
+using ( bucket_id = 'videos' );

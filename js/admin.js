@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadMusicians();
     loadPhotos();
     loadTracks();
+    loadVideos();
     loadGigs();
     loadSongs();
   }
@@ -523,6 +524,147 @@ document.addEventListener('DOMContentLoaded', () => {
     } finally {
       uploadBtn.disabled = false;
       uploadBtn.textContent = 'Nummer toevoegen';
+    }
+  });
+
+  /* =========================================================
+     VIDEO'S
+     ========================================================= */
+  const videoList = document.getElementById('admin-video-list');
+  const videoEmbedField = document.getElementById('video-embed-field');
+  const videoFileField = document.getElementById('video-file-field');
+
+  document.querySelectorAll('input[name="video-source"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const isUpload = document.querySelector('input[name="video-source"]:checked').value === 'upload';
+      videoEmbedField.hidden = isUpload;
+      videoFileField.hidden = !isUpload;
+      document.getElementById('video-url').required = !isUpload;
+    });
+  });
+
+  function embedThumbHtml(v) {
+    if (v.source_type === 'upload') {
+      return `<video src="${v.video_url}" style="width:100%; max-height:160px; border-radius:3px;" controls></video>`;
+    }
+    return `<p class="field-hint" style="word-break:break-all;">${v.video_url}</p>`;
+  }
+
+  async function loadVideos() {
+    const { data, error } = await sb.from('videos').select('*').order('sort_order', { ascending: true });
+    if (error) { showToast('Kon video\u2019s niet laden.', true); return; }
+    renderVideoList(data || []);
+  }
+
+  function renderVideoList(videos) {
+    if (!videos.length) {
+      videoList.innerHTML = '<p class="no-results">Nog geen video\u2019s toegevoegd.</p>';
+      return;
+    }
+    videoList.innerHTML = videos.map(v => `
+      <div class="admin-list-row" data-video-id="${v.id}" style="align-items: flex-start; flex-wrap: wrap;">
+        <div style="display:flex; flex-direction:column; gap:8px; flex:1; min-width:220px;">
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input type="text" class="row-title" value="${(v.title || '').replace(/"/g, '&quot;')}" placeholder="Titel" style="flex:1; min-width:160px;">
+            <input type="text" class="row-desc" value="${(v.description || '').replace(/"/g, '&quot;')}" placeholder="Omschrijving" style="flex:1; min-width:160px;">
+          </div>
+          <span class="field-hint">${v.source_type === 'upload' ? 'Geüpload bestand' : 'YouTube/Vimeo-link'}</span>
+          ${embedThumbHtml(v)}
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-outline-dark btn-save-video" type="button">Bewaar</button>
+          <button class="btn btn-outline-dark btn-delete-video" type="button">Verwijder</button>
+        </div>
+      </div>
+    `).join('');
+
+    videoList.querySelectorAll('.btn-save-video').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const row = btn.closest('[data-video-id]');
+        btn.disabled = true;
+        const { error } = await sb.from('videos').update({
+          title: row.querySelector('.row-title').value,
+          description: row.querySelector('.row-desc').value
+        }).eq('id', row.dataset.videoId);
+        btn.disabled = false;
+        showToast(error ? 'Bewaren mislukt.' : 'Video bewaard.', Boolean(error));
+      });
+    });
+
+    videoList.querySelectorAll('.btn-delete-video').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Deze video verwijderen?')) return;
+        const row = btn.closest('[data-video-id]');
+        const { error } = await sb.from('videos').delete().eq('id', row.dataset.videoId);
+        if (error) { showToast('Verwijderen mislukt.', true); return; }
+        row.remove();
+        showToast('Video verwijderd.');
+      });
+    });
+  }
+
+  document.getElementById('video-add-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const sourceType = document.querySelector('input[name="video-source"]:checked').value;
+    const titleInput = document.getElementById('video-title');
+    const descInput = document.getElementById('video-desc');
+    const urlInput = document.getElementById('video-url');
+    const fileInput = document.getElementById('video-file');
+    const errorEl = document.getElementById('video-upload-error');
+    const submitBtn = document.getElementById('video-upload-btn');
+    errorEl.style.display = 'none';
+
+    if (sourceType === 'embed' && !urlInput.value.trim()) {
+      errorEl.textContent = 'Vul een YouTube- of Vimeo-link in.';
+      errorEl.style.display = 'block';
+      return;
+    }
+    if (sourceType === 'upload' && !fileInput.files[0]) {
+      errorEl.textContent = 'Kies een videobestand om te uploaden.';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Bezig…';
+
+    try {
+      let videoUrl = urlInput.value.trim();
+
+      if (sourceType === 'upload') {
+        const file = fileInput.files[0];
+        const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+        const path = `${Date.now()}-${safeName}`;
+        const { error: uploadError } = await sb.storage.from('videos').upload(path, file, { cacheControl: '3600', upsert: false });
+        if (uploadError) throw uploadError;
+        const { data: publicUrlData } = sb.storage.from('videos').getPublicUrl(path);
+        videoUrl = publicUrlData.publicUrl;
+      }
+
+      const { data: existing } = await sb.from('videos').select('sort_order').order('sort_order', { ascending: false }).limit(1);
+      const nextOrder = existing && existing.length ? existing[0].sort_order + 1 : 0;
+
+      const { error: insertError } = await sb.from('videos').insert({
+        title: titleInput.value.trim(),
+        description: descInput.value.trim(),
+        source_type: sourceType,
+        video_url: videoUrl,
+        sort_order: nextOrder
+      });
+      if (insertError) throw insertError;
+
+      e.target.reset();
+      videoEmbedField.hidden = false;
+      videoFileField.hidden = true;
+      urlInput.required = true;
+      showToast('Video toegevoegd.');
+      loadVideos();
+    } catch (err) {
+      errorEl.textContent = 'Toevoegen mislukt: ' + (err.message || err) + (sourceType === 'upload' ? ' (bestaat de opslagruimte "videos" al?)' : '');
+      errorEl.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Video toevoegen';
     }
   });
 

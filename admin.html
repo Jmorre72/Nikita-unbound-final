@@ -61,6 +61,7 @@
         <button class="tab-btn" data-tab="muzikanten" type="button">Muzikanten</button>
         <button class="tab-btn" data-tab="fotos" type="button">Foto's</button>
         <button class="tab-btn" data-tab="muziek" type="button">Muziek</button>
+        <button class="tab-btn" data-tab="videos" type="button">Video's</button>
         <button class="tab-btn" data-tab="kalender" type="button">Kalender</button>
         <button class="tab-btn" data-tab="repertoire" type="button">Repertoire</button>
       </nav>
@@ -619,31 +620,6 @@
             <input type="text" class="text-input">
             <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
           </div>
-          <div class="admin-text-field" data-text-key="video1_title">
-            <label>Video 1: titel</label>
-            <input type="text" class="text-input">
-            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
-          </div>
-          <div class="admin-text-field" data-text-key="video1_desc">
-            <label>Video 1: tekst</label>
-            <textarea class="text-input"></textarea>
-            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
-          </div>
-          <div class="admin-text-field" data-text-key="video2_title">
-            <label>Video 2: titel</label>
-            <input type="text" class="text-input">
-            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
-          </div>
-          <div class="admin-text-field" data-text-key="video2_desc">
-            <label>Video 2: tekst</label>
-            <textarea class="text-input"></textarea>
-            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
-          </div>
-          <div class="admin-text-field" data-text-key="videos_placeholder_note">
-            <label>Video&#x27;s: opmerking onder de placeholders</label>
-            <textarea class="text-input"></textarea>
-            <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
-          </div>
           <div class="admin-text-field" data-text-key="audio_eyebrow">
             <label>Opnames: label</label>
             <input type="text" class="text-input">
@@ -808,6 +784,46 @@
         </form>
 
         <div class="admin-list" id="admin-track-list"></div>
+      </div>
+
+      <!-- ---------- VIDEO'S ---------- -->
+      <div class="tab-panel" data-tab-panel="videos" hidden>
+        <p class="lead-text">Voeg video's toe voor "Live in beeld". Plak een YouTube- of Vimeo-link, óf upload een eigen videobestand — kies wat het best past.</p>
+
+        <form id="video-add-form" class="admin-upload-form">
+          <div class="field" style="flex-basis:100%;">
+            <label>Bron</label>
+            <div style="display:flex; gap:22px; margin-top:4px;">
+              <label style="display:flex; align-items:center; gap:8px; font-weight:400; text-transform:none; letter-spacing:normal; font-size:.92rem;">
+                <input type="radio" name="video-source" value="embed" checked style="width:auto;"> YouTube/Vimeo-link
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; font-weight:400; text-transform:none; letter-spacing:normal; font-size:.92rem;">
+                <input type="radio" name="video-source" value="upload" style="width:auto;"> Video-bestand uploaden
+              </label>
+            </div>
+          </div>
+          <div class="field" id="video-embed-field">
+            <label for="video-url">YouTube- of Vimeo-link</label>
+            <input type="url" id="video-url" placeholder="https://www.youtube.com/watch?v=...">
+          </div>
+          <div class="field" id="video-file-field" hidden>
+            <label for="video-file">Videobestand</label>
+            <input type="file" id="video-file" accept="video/*">
+            <p class="field-hint">Let op: video's zijn grote bestanden. Een link naar YouTube/Vimeo is meestal sneller voor bezoekers en verbruikt geen opslagruimte.</p>
+          </div>
+          <div class="field">
+            <label for="video-title">Titel</label>
+            <input type="text" id="video-title" placeholder="Bv. Live optreden — receptie" required>
+          </div>
+          <div class="field">
+            <label for="video-desc">Omschrijving (optioneel)</label>
+            <input type="text" id="video-desc" placeholder="Bv. Sfeerbeelden van een recente receptie">
+          </div>
+          <button type="submit" class="btn btn-gold" id="video-upload-btn">Video toevoegen</button>
+          <p id="video-upload-error" class="field-error" style="display:none;"></p>
+        </form>
+
+        <div class="admin-list" id="admin-video-list"></div>
       </div>
 
       <!-- ---------- KALENDER ---------- -->

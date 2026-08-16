@@ -279,6 +279,67 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* =========================================================
+     VIDEO'S — "Live in beeld"
+     ========================================================= */
+  const videoGrid = document.querySelector('[data-video-grid]');
+
+  function toEmbedUrl(url) {
+    if (!url) return '';
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes('youtu.be')) {
+        return `https://www.youtube.com/embed/${u.pathname.slice(1)}`;
+      }
+      if (u.hostname.includes('youtube.com')) {
+        if (u.searchParams.get('v')) return `https://www.youtube.com/embed/${u.searchParams.get('v')}`;
+        if (u.pathname.startsWith('/embed/')) return url;
+        if (u.pathname.startsWith('/shorts/')) return `https://www.youtube.com/embed/${u.pathname.split('/')[2]}`;
+      }
+      if (u.hostname.includes('vimeo.com')) {
+        const id = u.pathname.split('/').filter(Boolean).pop();
+        return `https://player.vimeo.com/video/${id}`;
+      }
+      return url; // onbekend formaat: gebruik zoals opgegeven
+    } catch {
+      return url;
+    }
+  }
+
+  if (videoGrid) {
+    if (window.supabaseClient) {
+      window.supabaseClient
+        .from('videos')
+        .select('*')
+        .order('sort_order', { ascending: true })
+        .then(({ data, error }) => {
+          if (error || !data || !data.length) {
+            document.querySelector('[data-video-empty]')?.removeAttribute('hidden');
+            return;
+          }
+          videoGrid.innerHTML = data.map(v => `
+            <div class="video-card reveal is-visible">
+              <div class="video-frame">
+                ${v.source_type === 'upload'
+                  ? `<video controls src="${v.video_url}"></video>`
+                  : `<iframe src="${toEmbedUrl(v.video_url)}" title="${(v.title || '').replace(/"/g, '&quot;')}" loading="lazy" allowfullscreen></iframe>`}
+              </div>
+              <div class="caption">
+                <h3>${v.title || ''}</h3>
+                <p>${v.description || ''}</p>
+              </div>
+            </div>
+          `).join('');
+        })
+        .catch(err => {
+          console.warn('Kon video\u2019s niet laden uit Supabase.', err);
+          document.querySelector('[data-video-empty]')?.removeAttribute('hidden');
+        });
+    } else {
+      document.querySelector('[data-video-empty]')?.removeAttribute('hidden');
+    }
+  }
+
+  /* =========================================================
      FOTO'S — galerij + lightbox
      ========================================================= */
   const galleryGrid = document.querySelector('[data-gallery-grid]');
