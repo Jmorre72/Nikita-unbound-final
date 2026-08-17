@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Repertoire — Nikita Unbound</title>
 <meta name="description" content="Ontdek het repertoire van Nikita Unbound en kies als geboekte klant welke nummers u graag hoort, of vraag een verzoeknummer aan.">
+<link rel="canonical" href="https://www.nikita-unbound.be/repertoire.html">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nikita Unbound">
+<meta property="og:locale" content="nl_BE">
+<meta property="og:url" content="https://www.nikita-unbound.be/repertoire.html">
+<meta property="og:title" content="Repertoire — Nikita Unbound">
+<meta property="og:description" content="Ontdek het repertoire van Nikita Unbound en kies als geboekte klant welke nummers u graag hoort, of vraag een verzoeknummer aan.">
+<meta property="og:image" content="https://www.nikita-unbound.be/assets/hero-photo.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Repertoire — Nikita Unbound">
+<meta name="twitter:description" content="Ontdek het repertoire van Nikita Unbound en kies als geboekte klant welke nummers u graag hoort, of vraag een verzoeknummer aan.">
+<meta name="twitter:image" content="https://www.nikita-unbound.be/assets/hero-photo.jpg">
 <link rel="icon" href="assets/logo.jpg">
 <link rel="stylesheet" href="css/style.css">
 <script>document.documentElement.classList.add("js")</script>
@@ -80,7 +93,10 @@
       <p class="lead-text" data-key="rep_form_lead">Selecteer hierboven uw favoriete nummers uit het repertoire en vul onderstaand formulier in. Staat een nummer er niet bij? Vraag het gerust aan — we bekijken of we het kunnen instuderen tegen uw feest.</p>
     </div>
 
-    <form data-validate class="reveal" novalidate>
+    <form data-validate data-web3forms class="reveal" novalidate>
+      <input type="hidden" name="subject" value="Nieuwe nummerkeuze — Nikita Unbound">
+      <input type="hidden" name="from_name" value="Nikita Unbound — website (repertoire)">
+      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
       <div class="form-fields">
         <div class="form-grid">
           <div class="field">
@@ -111,6 +127,8 @@
         </div>
         <button type="submit" class="btn btn-gold mt-40" data-key="rep_submit_btn">Nummerkeuze doorsturen</button>
         <p class="form-note" data-key="rep_form_note">Nog geen boeking? Regel dit eerst via de <a href="boeking.html" style="text-decoration:underline;">boekingspagina</a>.</p>
+        <p class="field-hint">Door dit formulier te versturen gaat u akkoord met ons <a href="privacybeleid.html" style="text-decoration:underline;">privacybeleid</a>.</p>
+        <p class="form-send-error field-error" style="display:none;"></p>
       </div>
       <p class="form-success" data-key="rep_success_msg">Bedankt! Uw nummerkeuze is genoteerd, we nemen dit mee in de voorbereiding van uw feest.</p>
     </form>
@@ -140,7 +158,7 @@
       </div>
       <div class="footer-col">
         <h4 data-key="footer_contact_heading">Contact</h4>
-        <p data-key="footer_email">info@nikitaunbound.be</p>
+        <p data-key="footer_email">bookings@nikita-unbound.be</p>
         <p data-key="footer_phone">+32 470 00 00 00</p>
         <p data-key="footer_city">Gent, België</p>
         <div class="footer-social">
@@ -156,6 +174,7 @@
     <div class="footer-bottom">
       <span>© <span data-year></span> <span data-key="footer_copyright">Nikita Unbound. Alle rechten voorbehouden.</span></span>
       <span data-key="footer_tagline">Akoestisch • Intiem • Onbegrensd</span>
+      <a href="privacybeleid.html" style="opacity:.6;font-size:.78rem;text-decoration:underline;">Privacybeleid</a>
       <a href="admin.html" style="opacity:.45;font-size:.78rem;">Beheer</a>
     </div>
   </div>
@@ -165,6 +184,7 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/supabase-client.js"></script>
 <script src="js/content.js"></script>
+<script src="js/web3forms-config.js"></script>
 <script src="js/script.js"></script>
 </body>
 </html>

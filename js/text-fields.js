@@ -134,5 +134,7 @@ window.TEXT_FIELDS = [
   { key: 'footer_city', page: 'Footer (overal)', label: 'Stad/land', type: 'text' },
   { key: 'social_instagram_url', page: 'Footer (overal)', label: 'Instagram-link', type: 'text' },
   { key: 'social_facebook_url', page: 'Footer (overal)', label: 'Facebook-link', type: 'text' },
+  { key: 'privacy_contact_name', page: 'Footer (overal)', label: 'Privacybeleid: naam verwerkingsverantwoordelijke', type: 'text' },
+  { key: 'privacy_last_updated', page: 'Footer (overal)', label: 'Privacybeleid: datum laatste update', type: 'text' },
   { key: 'footer_slogan', page: 'Footer (overal)', label: 'Slagzin rechts onderaan', type: 'text' },
 ];

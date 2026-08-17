@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /instructies.html
+
+Sitemap: https://www.nikita-unbound.be/sitemap.xml
