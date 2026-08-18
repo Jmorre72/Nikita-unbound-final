@@ -64,6 +64,7 @@
         <button class="tab-btn" data-tab="videos" type="button">Video's</button>
         <button class="tab-btn" data-tab="kalender" type="button">Kalender</button>
         <button class="tab-btn" data-tab="repertoire" type="button">Repertoire</button>
+        <button class="tab-btn" data-tab="contracten" type="button">Contracten</button>
       </nav>
 
       <!-- ---------- TEKSTEN ---------- -->
@@ -883,6 +884,127 @@
         </form>
 
         <div class="admin-list" id="admin-song-list"></div>
+      </div>
+
+      <!-- ---------- CONTRACTEN ---------- -->
+      <div class="tab-panel" data-tab-panel="contracten" hidden>
+        <p class="lead-text">Maak contracten aan voor optredens, bewaar ze, print ze of sla ze op als PDF, en e-mail ze naar de organisator.</p>
+
+        <div class="admin-text-groups" style="margin-bottom:30px;">
+          <details class="admin-text-group">
+            <summary>Standaardgegevens op elk contract</summary>
+            <div class="admin-text-fields">
+              <div class="admin-text-field" data-text-key="contract_company_name">
+                <label>Naam uitvoerder (jullie)</label>
+                <input type="text" class="text-input">
+                <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+              </div>
+              <div class="admin-text-field" data-text-key="contract_company_address">
+                <label>Adres uitvoerder</label>
+                <input type="text" class="text-input">
+                <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+              </div>
+              <div class="admin-text-field" data-text-key="contract_bank_iban">
+                <label>Rekeningnummer (IBAN) voor betaling <span class="field-hint">(leeg = niet vermeld op het contract)</span></label>
+                <input type="text" class="text-input" placeholder="BE00 0000 0000 0000">
+                <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+              </div>
+              <div class="admin-text-field" data-text-key="contract_vat_default">
+                <label>Standaard BTW-vermelding <span class="field-hint">(bv. "Vrijgesteld van BTW, kleine ondernemingsregeling" of "21% BTW inbegrepen")</span></label>
+                <input type="text" class="text-input">
+                <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+              </div>
+              <div class="admin-text-field" data-text-key="contract_cancellation_policy">
+                <label>Annuleringsvoorwaarden</label>
+                <textarea class="text-input" rows="4"></textarea>
+                <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+              </div>
+              <div class="admin-text-field" data-text-key="contract_image_rights_text">
+                <label>Tekst bij toestemming beeldmateriaal</label>
+                <textarea class="text-input" rows="3"></textarea>
+                <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+              </div>
+              <div class="admin-text-field" data-text-key="contract_footer_note">
+                <label>Kleine voetnoot onderaan elk contract</label>
+                <textarea class="text-input" rows="2"></textarea>
+                <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <form id="contract-form" class="admin-contract-form">
+          <input type="hidden" id="contract-id" value="">
+
+          <h3 class="admin-form-section-title">Organisator</h3>
+          <div class="admin-form-grid">
+            <div class="field"><label for="c-organizer-name">Naam</label><input type="text" id="c-organizer-name" required></div>
+            <div class="field"><label for="c-organizer-company">Bedrijfsnaam (optioneel)</label><input type="text" id="c-organizer-company"></div>
+            <div class="field"><label for="c-organizer-email">E-mailadres</label><input type="email" id="c-organizer-email" required></div>
+            <div class="field"><label for="c-organizer-phone">Telefoonnummer</label><input type="tel" id="c-organizer-phone"></div>
+            <div class="field full"><label for="c-organizer-address">Adres</label><input type="text" id="c-organizer-address"></div>
+            <div class="field"><label for="c-organizer-vat">Ondernemingsnummer (optioneel)</label><input type="text" id="c-organizer-vat"></div>
+          </div>
+
+          <h3 class="admin-form-section-title">Optreden</h3>
+          <div class="admin-form-grid">
+            <div class="field">
+              <label for="c-event-type">Type gelegenheid</label>
+              <select id="c-event-type">
+                <option value="">Kies een optie</option>
+                <option>Trouwreceptie</option>
+                <option>Receptie</option>
+                <option>Tuinfeest</option>
+                <option>Personeelsfeest</option>
+                <option>Andere</option>
+              </select>
+            </div>
+            <div class="field"><label for="c-event-date">Datum</label><input type="date" id="c-event-date"></div>
+            <div class="field"><label for="c-event-start">Aanvangsuur</label><input type="time" id="c-event-start"></div>
+            <div class="field"><label for="c-event-end">Einduur</label><input type="time" id="c-event-end"></div>
+            <div class="field"><label for="c-venue-name">Naam locatie</label><input type="text" id="c-venue-name"></div>
+            <div class="field"><label for="c-guest-count">Aantal gasten (optioneel)</label><input type="number" id="c-guest-count" min="0"></div>
+            <div class="field full"><label for="c-venue-address">Adres van de locatie</label><input type="text" id="c-venue-address"></div>
+            <div class="field full"><label for="c-technical-notes">Technische bijzonderheden</label><textarea id="c-technical-notes" rows="2" placeholder="Stroomvoorziening, ruimte, parking, soundcheck-tijdstip, ..."></textarea></div>
+            <div class="field full"><label for="c-repertoire-notes">Opmerkingen repertoire</label><textarea id="c-repertoire-notes" rows="2" placeholder="Gewenste nummers, sfeer, ..."></textarea></div>
+          </div>
+
+          <h3 class="admin-form-section-title">Vergoeding</h3>
+          <div class="admin-form-grid">
+            <div class="field"><label for="c-fee-amount">Gage</label><input type="text" id="c-fee-amount" placeholder="Bv. € 450"></div>
+            <div class="field"><label for="c-vat-note">BTW-vermelding</label><input type="text" id="c-vat-note" placeholder="Standaard wordt de ingestelde tekst hierboven gebruikt"></div>
+            <div class="field"><label for="c-deposit-amount">Voorschot</label><input type="text" id="c-deposit-amount" placeholder="Bv. € 100"></div>
+            <div class="field"><label for="c-deposit-due">Voorschot te betalen voor</label><input type="text" id="c-deposit-due" placeholder="Bv. 2 weken na ondertekening"></div>
+            <div class="field"><label for="c-balance-due">Saldo te betalen voor</label><input type="text" id="c-balance-due" placeholder="Bv. op de dag van het optreden"></div>
+          </div>
+
+          <h3 class="admin-form-section-title">Extra</h3>
+          <div class="admin-form-grid">
+            <div class="field">
+              <label for="c-status">Status</label>
+              <select id="c-status">
+                <option value="concept">Concept</option>
+                <option value="verzonden">Verzonden</option>
+                <option value="ondertekend">Ondertekend</option>
+                <option value="geannuleerd">Geannuleerd</option>
+              </select>
+            </div>
+            <div class="field" style="display:flex; align-items:center; gap:10px; padding-top:24px;">
+              <input type="checkbox" id="c-image-rights" checked style="width:auto;">
+              <label for="c-image-rights" style="margin:0;">Toestemming beeldmateriaal opnemen in contract</label>
+            </div>
+            <div class="field full"><label for="c-internal-notes">Interne notities <span class="field-hint">(niet zichtbaar voor de organisator)</span></label><textarea id="c-internal-notes" rows="2"></textarea></div>
+          </div>
+
+          <div style="display:flex; gap:14px; align-items:center; margin-top:10px; flex-wrap:wrap;">
+            <button type="submit" class="btn btn-gold" id="contract-submit-btn">Contract opslaan</button>
+            <button type="button" class="btn btn-outline-dark" id="contract-cancel-edit" hidden>Annuleer bewerken</button>
+          </div>
+          <p id="contract-form-error" class="field-error" style="display:none;"></p>
+        </form>
+
+        <h3 class="admin-form-section-title" style="margin-top:44px;">Opgeslagen contracten</h3>
+        <div class="admin-contract-list" id="admin-contract-list"></div>
       </div>
 
     </section>
