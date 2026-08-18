@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadVideos();
     loadGigs();
     loadSongs();
+    loadContracts();
   }
 
   /* ---------- Inloggen / uitloggen ---------- */
@@ -812,5 +813,308 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast('Nummer toegevoegd.');
     loadSongs();
   });
+
+  /* =========================================================
+     CONTRACTEN
+     ========================================================= */
+  const contractList = document.getElementById('admin-contract-list');
+  const contractForm = document.getElementById('contract-form');
+  const contractSubmitBtn = document.getElementById('contract-submit-btn');
+  const contractCancelBtn = document.getElementById('contract-cancel-edit');
+  const contractErrorEl = document.getElementById('contract-form-error');
+
+  const CONTRACT_FIELD_MAP = {
+    organizer_name: 'c-organizer-name',
+    organizer_company: 'c-organizer-company',
+    organizer_email: 'c-organizer-email',
+    organizer_phone: 'c-organizer-phone',
+    organizer_address: 'c-organizer-address',
+    organizer_vat: 'c-organizer-vat',
+    event_type: 'c-event-type',
+    event_date: 'c-event-date',
+    event_start_time: 'c-event-start',
+    event_end_time: 'c-event-end',
+    venue_name: 'c-venue-name',
+    guest_count: 'c-guest-count',
+    venue_address: 'c-venue-address',
+    technical_notes: 'c-technical-notes',
+    repertoire_notes: 'c-repertoire-notes',
+    fee_amount: 'c-fee-amount',
+    vat_note: 'c-vat-note',
+    deposit_amount: 'c-deposit-amount',
+    deposit_due: 'c-deposit-due',
+    balance_due: 'c-balance-due',
+    status: 'c-status',
+    internal_notes: 'c-internal-notes'
+  };
+  const STATUS_LABELS = { concept: 'Concept', verzonden: 'Verzonden', ondertekend: 'Ondertekend', geannuleerd: 'Geannuleerd' };
+
+  function getContractText(key) {
+    const field = document.querySelector(`[data-text-key="${key}"] .text-input`);
+    return field ? field.value.trim() : '';
+  }
+
+  function resetContractForm() {
+    contractForm.reset();
+    document.getElementById('contract-id').value = '';
+    document.getElementById('c-image-rights').checked = true;
+    document.getElementById('c-status').value = 'concept';
+    contractSubmitBtn.textContent = 'Contract opslaan';
+    contractCancelBtn.hidden = true;
+  }
+
+  contractCancelBtn.addEventListener('click', resetContractForm);
+
+  async function loadContracts() {
+    const { data, error } = await sb.from('contracts').select('*').order('event_date', { ascending: true, nullsFirst: false });
+    if (error) { showToast('Kon contracten niet laden.', true); return; }
+    renderContractList(data || []);
+  }
+
+  function formatContractDate(dateStr) {
+    if (!dateStr) return 'geen datum ingesteld';
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('nl-BE', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function renderContractList(contracts) {
+    if (!contracts.length) {
+      contractList.innerHTML = '<p class="no-results">Nog geen contracten aangemaakt.</p>';
+      return;
+    }
+    contractList.innerHTML = contracts.map(c => `
+      <div class="contract-card" data-contract-id="${c.id}">
+        <div class="contract-card-main">
+          <span class="contract-status-badge ${c.status}">${STATUS_LABELS[c.status] || c.status}</span>
+          <h4>${(c.organizer_company || c.organizer_name || 'Naamloos').replace(/</g, '&lt;')}</h4>
+          <div class="contract-meta">${c.event_type || 'Type onbekend'} — ${formatContractDate(c.event_date)}${c.venue_name ? ' — ' + c.venue_name : ''}</div>
+          <div class="contract-fee">${c.fee_amount ? 'Gage: ' + c.fee_amount : ''}</div>
+        </div>
+        <div class="contract-card-actions">
+          <select class="contract-status-select" aria-label="Status wijzigen">
+            ${Object.entries(STATUS_LABELS).map(([val, label]) => `<option value="${val}" ${c.status === val ? 'selected' : ''}>${label}</option>`).join('')}
+          </select>
+          <button class="btn btn-outline-dark btn-edit-contract" type="button">Bewerken</button>
+          <button class="btn btn-outline-dark btn-print-contract" type="button">Print / PDF</button>
+          <button class="btn btn-outline-dark btn-email-contract" type="button">E-mailen</button>
+          <button class="btn btn-outline-dark btn-delete-contract" type="button">Verwijder</button>
+        </div>
+      </div>
+    `).join('');
+
+    contractList.querySelectorAll('.contract-status-select').forEach(sel => {
+      sel.addEventListener('change', async () => {
+        const card = sel.closest('[data-contract-id]');
+        const { error } = await sb.from('contracts').update({ status: sel.value, updated_at: new Date().toISOString() }).eq('id', card.dataset.contractId);
+        if (error) { showToast('Status bijwerken mislukt.', true); return; }
+        const badge = card.querySelector('.contract-status-badge');
+        badge.className = 'contract-status-badge ' + sel.value;
+        badge.textContent = STATUS_LABELS[sel.value];
+        showToast('Status bijgewerkt.');
+      });
+    });
+
+    contractList.querySelectorAll('.btn-edit-contract').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.closest('[data-contract-id]').dataset.contractId;
+        const contract = contracts.find(c => c.id === id);
+        if (!contract) return;
+        document.getElementById('contract-id').value = contract.id;
+        Object.entries(CONTRACT_FIELD_MAP).forEach(([field, elId]) => {
+          const el = document.getElementById(elId);
+          if (el) el.value = contract[field] ?? '';
+        });
+        document.getElementById('c-image-rights').checked = contract.image_rights !== false;
+        contractSubmitBtn.textContent = 'Contract bijwerken';
+        contractCancelBtn.hidden = false;
+        contractForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    contractList.querySelectorAll('.btn-delete-contract').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Dit contract definitief verwijderen?')) return;
+        const id = btn.closest('[data-contract-id]').dataset.contractId;
+        const { error } = await sb.from('contracts').delete().eq('id', id);
+        if (error) { showToast('Verwijderen mislukt.', true); return; }
+        showToast('Contract verwijderd.');
+        loadContracts();
+      });
+    });
+
+    contractList.querySelectorAll('.btn-print-contract').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.closest('[data-contract-id]').dataset.contractId;
+        const contract = contracts.find(c => c.id === id);
+        if (contract) openContractPrintView(contract);
+      });
+    });
+
+    contractList.querySelectorAll('.btn-email-contract').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.closest('[data-contract-id]').dataset.contractId;
+        const contract = contracts.find(c => c.id === id);
+        if (contract) emailContract(contract);
+      });
+    });
+  }
+
+  contractForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    contractErrorEl.style.display = 'none';
+    contractSubmitBtn.disabled = true;
+
+    const payload = {};
+    Object.entries(CONTRACT_FIELD_MAP).forEach(([field, elId]) => {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      if (field === 'guest_count') {
+        payload[field] = el.value === '' ? null : Number(el.value);
+      } else if (field === 'event_date') {
+        payload[field] = el.value || null;
+      } else {
+        payload[field] = el.value;
+      }
+    });
+    payload.image_rights = document.getElementById('c-image-rights').checked;
+    payload.updated_at = new Date().toISOString();
+
+    const existingId = document.getElementById('contract-id').value;
+
+    try {
+      let error;
+      if (existingId) {
+        ({ error } = await sb.from('contracts').update(payload).eq('id', existingId));
+      } else {
+        ({ error } = await sb.from('contracts').insert(payload));
+      }
+      if (error) throw error;
+      showToast(existingId ? 'Contract bijgewerkt.' : 'Contract opgeslagen.');
+      resetContractForm();
+      loadContracts();
+    } catch (err) {
+      contractErrorEl.textContent = 'Opslaan mislukt: ' + (err.message || err);
+      contractErrorEl.style.display = 'block';
+    } finally {
+      contractSubmitBtn.disabled = false;
+    }
+  });
+
+  /* ---------- Print / opslaan als PDF ---------- */
+  function openContractPrintView(c) {
+    const companyName = getContractText('contract_company_name') || 'Nikita Unbound';
+    const companyAddress = getContractText('contract_company_address');
+    const iban = getContractText('contract_bank_iban');
+    const vatDefault = getContractText('contract_vat_default');
+    const cancellationPolicy = getContractText('contract_cancellation_policy');
+    const imageRightsText = getContractText('contract_image_rights_text');
+    const footerNote = getContractText('contract_footer_note');
+
+    const esc = (s) => (s || '').toString().replace(/</g, '&lt;');
+    const row = (label, value) => value ? `<tr><th>${label}</th><td>${esc(value)}</td></tr>` : '';
+
+    const win = window.open('', '_blank');
+    if (!win) { showToast('Kon printvenster niet openen (pop-up geblokkeerd?).', true); return; }
+
+    win.document.write(`<!DOCTYPE html>
+<html lang="nl"><head><meta charset="UTF-8"><title>Contract — ${esc(c.organizer_company || c.organizer_name)}</title>
+<style>
+  body{ font-family: Georgia, 'Times New Roman', serif; color:#1a1a1a; max-width:780px; margin:40px auto; padding:0 20px; line-height:1.55; }
+  h1{ font-size:1.6rem; border-bottom:2px solid #10203A; padding-bottom:14px; margin-bottom:6px; }
+  h2{ font-size:1.05rem; margin:30px 0 10px; color:#10203A; text-transform:uppercase; letter-spacing:.04em; }
+  .parties{ display:flex; justify-content:space-between; gap:30px; margin:20px 0 10px; font-size:.92rem; }
+  .parties div{ flex:1; }
+  table{ width:100%; border-collapse:collapse; font-size:.92rem; }
+  th{ text-align:left; width:220px; padding:6px 10px 6px 0; vertical-align:top; color:#444; font-weight:600; }
+  td{ padding:6px 0; vertical-align:top; }
+  .clause{ font-size:.88rem; color:#333; margin-top:8px; }
+  .sign-row{ display:flex; justify-content:space-between; gap:60px; margin-top:70px; }
+  .sign-box{ flex:1; }
+  .sign-line{ border-top:1px solid #333; margin-top:60px; padding-top:6px; font-size:.82rem; }
+  .footnote{ margin-top:50px; font-size:.76rem; color:#777; border-top:1px solid #ddd; padding-top:14px; }
+  @media print{ .no-print{ display:none; } body{ margin:0 auto; } }
+  .no-print{ text-align:center; margin-bottom:30px; }
+  .no-print button{ font-size:1rem; padding:10px 22px; cursor:pointer; }
+</style></head>
+<body>
+  <div class="no-print"><button onclick="window.print()">Afdrukken / opslaan als PDF</button></div>
+
+  <h1>Overeenkomst voor optreden</h1>
+  <p style="font-size:.85rem; color:#666;">Opgesteld op ${new Date().toLocaleDateString('nl-BE', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+
+  <div class="parties">
+    <div><strong>Uitvoerder</strong><br>${esc(companyName)}${companyAddress ? '<br>' + esc(companyAddress) : ''}</div>
+    <div><strong>Opdrachtgever</strong><br>${esc(c.organizer_company || c.organizer_name)}${c.organizer_company ? '<br>t.a.v. ' + esc(c.organizer_name) : ''}${c.organizer_address ? '<br>' + esc(c.organizer_address) : ''}</div>
+  </div>
+
+  <h2>Gegevens optreden</h2>
+  <table>
+    ${row('Type gelegenheid', c.event_type)}
+    ${row('Datum', c.event_date ? formatContractDate(c.event_date) : '')}
+    ${row('Aanvangsuur', c.event_start_time)}
+    ${row('Einduur', c.event_end_time)}
+    ${row('Locatie', c.venue_name)}
+    ${row('Adres locatie', c.venue_address)}
+    ${row('Aantal gasten', c.guest_count)}
+    ${row('Technische bijzonderheden', c.technical_notes)}
+    ${row('Repertoire / opmerkingen', c.repertoire_notes)}
+  </table>
+
+  <h2>Vergoeding</h2>
+  <table>
+    ${row('Gage', c.fee_amount)}
+    ${row('BTW', c.vat_note || vatDefault)}
+    ${row('Voorschot', c.deposit_amount)}
+    ${row('Voorschot te betalen voor', c.deposit_due)}
+    ${row('Saldo te betalen voor', c.balance_due)}
+    ${row('Rekeningnummer', iban)}
+  </table>
+
+  <h2>Contactgegevens opdrachtgever</h2>
+  <table>
+    ${row('E-mail', c.organizer_email)}
+    ${row('Telefoon', c.organizer_phone)}
+    ${row('Ondernemingsnummer', c.organizer_vat)}
+  </table>
+
+  ${cancellationPolicy ? `<h2>Annuleringsvoorwaarden</h2><p class="clause">${esc(cancellationPolicy)}</p>` : ''}
+  ${c.image_rights && imageRightsText ? `<h2>Beeldmateriaal</h2><p class="clause">${esc(imageRightsText)}</p>` : ''}
+
+  <div class="sign-row">
+    <div class="sign-box"><div class="sign-line">Voor akkoord — ${esc(companyName)}<br>Datum: ____________________</div></div>
+    <div class="sign-box"><div class="sign-line">Voor akkoord — ${esc(c.organizer_company || c.organizer_name)}<br>Datum: ____________________</div></div>
+  </div>
+
+  ${footerNote ? `<div class="footnote">${esc(footerNote)}</div>` : ''}
+</body></html>`);
+    win.document.close();
+  }
+
+  /* ---------- E-mailen naar organisator ---------- */
+  function emailContract(c) {
+    if (!c.organizer_email) { showToast('Geen e-mailadres bij dit contract.', true); return; }
+    const companyName = getContractText('contract_company_name') || 'Nikita Unbound';
+    const subject = `Contract optreden ${companyName} — ${c.event_date ? formatContractDate(c.event_date) : ''}`;
+    const bodyLines = [
+      `Beste ${c.organizer_name || ''},`,
+      '',
+      `Hierbij de afspraken voor het optreden van ${companyName}:`,
+      '',
+      `Type gelegenheid: ${c.event_type || '-'}`,
+      `Datum: ${c.event_date ? formatContractDate(c.event_date) : '-'}`,
+      `Aanvangsuur: ${c.event_start_time || '-'}${c.event_end_time ? ' tot ' + c.event_end_time : ''}`,
+      `Locatie: ${c.venue_name || '-'}${c.venue_address ? ', ' + c.venue_address : ''}`,
+      `Gage: ${c.fee_amount || '-'}`,
+      c.deposit_amount ? `Voorschot: ${c.deposit_amount}${c.deposit_due ? ' (te betalen voor ' + c.deposit_due + ')' : ''}` : '',
+      '',
+      'Het volledige contract vind je in bijlage (voeg het toegevoegde/afgedrukte PDF-bestand hier manueel toe).',
+      '',
+      'Met vriendelijke groeten,',
+      companyName
+    ].filter(line => line !== '').join('\n');
+
+    const mailto = `mailto:${encodeURIComponent(c.organizer_email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines)}`;
+    window.location.href = mailto;
+  }
 
 });
