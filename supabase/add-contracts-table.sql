@@ -30,6 +30,8 @@ create table if not exists contracts (
   deposit_amount text,
   deposit_due text,
   balance_due text,
+  musician_payments jsonb not null default '[]'::jsonb,
+  uses_wita boolean not null default false,
 
   image_rights boolean not null default true,
   internal_notes text,
@@ -39,6 +41,10 @@ create table if not exists contracts (
 );
 
 alter table contracts enable row level security;
+
+-- Voor wie deze tabel al eerder aanmaakte: nieuwe kolommen alsnog toevoegen
+alter table contracts add column if not exists musician_payments jsonb not null default '[]'::jsonb;
+alter table contracts add column if not exists uses_wita boolean not null default false;
 
 drop policy if exists "Beheerder leest - contracts" on contracts;
 create policy "Beheerder leest - contracts" on contracts for select to authenticated using (true);
@@ -59,5 +65,13 @@ insert into site_texts (key, value) values
   ('contract_vat_default', '(nog te bepalen)'),
   ('contract_cancellation_policy', 'Bij annulering door de opdrachtgever tot 30 dagen voor het optreden is 25% van de gage verschuldigd als annuleringsvergoeding. Bij annulering binnen de 30 dagen voor het optreden is de volledige gage verschuldigd. Bij overmacht langs de kant van Nikita Unbound (bv. ziekte) wordt in onderling overleg een alternatieve datum voorgesteld, of wordt een reeds betaald voorschot volledig terugbetaald.'),
   ('contract_image_rights_text', 'De opdrachtgever gaat ermee akkoord dat er tijdens het optreden beeld- en/of geluidsopnames gemaakt mogen worden, die Nikita Unbound mag gebruiken voor promotionele doeleinden (o.a. website en sociale media).'),
+  ('contract_wita_instructions', 'Voor muzikanten die (deels) via de amateurkunstenvergoeding (Working in the Arts) betaald worden, moet u als opdrachtgever elke prestatie vooraf registreren:
+
+1. Ga naar www.workinginthearts.be en meld u aan (als opdrachtgever) met uw eID of itsme.
+2. Klik op ''Geef een opdracht aan'' en registreer elke sessie (optreden en eventuele repetitie) apart, VOOR de datum waarop die plaatsvindt.
+3. Vul per sessie de datum, het overeengekomen bedrag (max. EUR 81,90 per dag per muzikant in 2026) en eventuele verplaatsingsvergoeding (max. EUR 23,40 per dag) in.
+4. De muzikant moet zelf ook eenmalig geregistreerd zijn als kunstenaar op hetzelfde platform.
+
+Meer info: www.workinginthearts.be'),
   ('contract_footer_note', 'Dit document is met zorg opgesteld als praktische overeenkomst tussen beide partijen, maar vormt geen juridisch bindend model opgesteld door een jurist. Bij twijfel raden we aan dit te laten nakijken.')
 on conflict (key) do nothing;

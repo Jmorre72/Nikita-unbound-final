@@ -822,6 +822,95 @@ document.addEventListener('DOMContentLoaded', () => {
   const contractSubmitBtn = document.getElementById('contract-submit-btn');
   const contractCancelBtn = document.getElementById('contract-cancel-edit');
   const contractErrorEl = document.getElementById('contract-form-error');
+  const musicianPaymentRows = document.getElementById('musician-payment-rows');
+  const addMusicianPaymentBtn = document.getElementById('add-musician-payment-btn');
+
+  const PAYMENT_METHOD_LABELS = { wita: 'Working in the Arts (AKV)', regulier: 'Reguliere vergoeding' };
+  const SESSION_TYPES = ['Optreden', 'Repetitie', 'Andere'];
+
+  let knownMusicianNames = [];
+  sb.from('musicians').select('name').then(({ data }) => {
+    if (data) {
+      knownMusicianNames = data.map(m => m.name).filter(Boolean);
+      const list = document.getElementById('known-musicians-list');
+      if (list) list.innerHTML = knownMusicianNames.map(n => `<option value="${n.replace(/"/g, '&quot;')}">`).join('');
+    }
+  });
+
+  function makeSessionRow(session) {
+    session = session || {};
+    const row = document.createElement('div');
+    row.className = 'mp-session-row';
+    row.innerHTML = `
+      <select class="mps-type" aria-label="Type sessie">
+        ${SESSION_TYPES.map(t => `<option ${session.type === t ? 'selected' : ''}>${t}</option>`).join('')}
+      </select>
+      <input type="date" class="mps-date" value="${session.date || ''}" aria-label="Datum sessie">
+      <input type="text" class="mps-amount" placeholder="Bedrag, bv. € 81,90" value="${(session.amount || '').replace(/"/g, '&quot;')}" aria-label="Bedrag">
+      <input type="text" class="mps-travel" placeholder="Verplaatsing (optioneel, max. € 23,40)" value="${(session.travel || '').replace(/"/g, '&quot;')}" aria-label="Verplaatsingsvergoeding">
+      <button type="button" class="btn-remove-session" aria-label="Sessie verwijderen">✕</button>
+    `;
+    row.querySelector('.btn-remove-session').addEventListener('click', () => row.remove());
+    return row;
+  }
+
+  function makeMusicianPaymentBlock(musician) {
+    musician = musician || {};
+    const block = document.createElement('div');
+    block.className = 'musician-payment-block';
+    block.innerHTML = `
+      <div class="admin-form-grid">
+        <div class="field"><label>Naam</label><input type="text" class="mp-name" list="known-musicians-list" value="${(musician.name || '').replace(/"/g, '&quot;')}"></div>
+        <div class="field"><label>Rijksregisternummer</label><input type="text" class="mp-rrn" placeholder="XX.XX.XX-XXX.XX" value="${(musician.rrn || '').replace(/"/g, '&quot;')}"></div>
+        <div class="field"><label>Rekeningnummer (IBAN)</label><input type="text" class="mp-iban" placeholder="BE00 0000 0000 0000" value="${(musician.iban || '').replace(/"/g, '&quot;')}"></div>
+        <div class="field">
+          <label>Betaalwijze</label>
+          <select class="mp-method">
+            ${Object.entries(PAYMENT_METHOD_LABELS).map(([val, label]) => `<option value="${val}" ${musician.method === val ? 'selected' : ''}>${label}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <p class="field-hint mp-sessions-label">Sessies (optreden, en eventueel een aparte repetitie op een andere datum):</p>
+      <div class="mp-sessions"></div>
+      <div class="mp-block-actions">
+        <button type="button" class="btn btn-outline-dark btn-add-session">+ Sessie toevoegen</button>
+        <button type="button" class="btn btn-outline-dark btn-remove-musician">Muzikant verwijderen</button>
+      </div>
+    `;
+    const sessionsContainer = block.querySelector('.mp-sessions');
+    const sessions = (musician.sessions && musician.sessions.length) ? musician.sessions : [{ type: 'Optreden' }];
+    sessions.forEach(s => sessionsContainer.appendChild(makeSessionRow(s)));
+
+    block.querySelector('.btn-add-session').addEventListener('click', () => {
+      sessionsContainer.appendChild(makeSessionRow({ type: 'Repetitie' }));
+    });
+    block.querySelector('.btn-remove-musician').addEventListener('click', () => block.remove());
+    return block;
+  }
+
+  addMusicianPaymentBtn.addEventListener('click', () => {
+    musicianPaymentRows.appendChild(makeMusicianPaymentBlock());
+  });
+
+  function serializeMusicianPayments() {
+    return Array.from(musicianPaymentRows.querySelectorAll('.musician-payment-block')).map(block => ({
+      name: block.querySelector('.mp-name').value.trim(),
+      rrn: block.querySelector('.mp-rrn').value.trim(),
+      iban: block.querySelector('.mp-iban').value.trim(),
+      method: block.querySelector('.mp-method').value,
+      sessions: Array.from(block.querySelectorAll('.mp-session-row')).map(row => ({
+        type: row.querySelector('.mps-type').value,
+        date: row.querySelector('.mps-date').value,
+        amount: row.querySelector('.mps-amount').value.trim(),
+        travel: row.querySelector('.mps-travel').value.trim()
+      })).filter(s => s.date || s.amount)
+    })).filter(m => m.name || m.sessions.length);
+  }
+
+  function populateMusicianPayments(list) {
+    musicianPaymentRows.innerHTML = '';
+    (list || []).forEach(m => musicianPaymentRows.appendChild(makeMusicianPaymentBlock(m)));
+  }
 
   const CONTRACT_FIELD_MAP = {
     organizer_name: 'c-organizer-name',
@@ -859,9 +948,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('contract-id').value = '';
     document.getElementById('c-image-rights').checked = true;
     document.getElementById('c-status').value = 'concept';
+    musicianPaymentRows.innerHTML = '';
+    musicianPaymentRows.appendChild(makeMusicianPaymentBlock());
     contractSubmitBtn.textContent = 'Contract opslaan';
     contractCancelBtn.hidden = true;
   }
+  resetContractForm();
 
   contractCancelBtn.addEventListener('click', resetContractForm);
 
@@ -877,6 +969,14 @@ document.addEventListener('DOMContentLoaded', () => {
     return d.toLocaleDateString('nl-BE', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
+  function summarizeMusicianPayments(list) {
+    if (!list || !list.length) return '';
+    return list.map(m => {
+      const total = (m.sessions || []).filter(s => s.amount).map(s => s.amount).join(' + ');
+      return `${m.name || 'Muzikant'}${total ? ': ' + total : ''}`;
+    }).join(' · ');
+  }
+
   function renderContractList(contracts) {
     if (!contracts.length) {
       contractList.innerHTML = '<p class="no-results">Nog geen contracten aangemaakt.</p>';
@@ -888,7 +988,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="contract-status-badge ${c.status}">${STATUS_LABELS[c.status] || c.status}</span>
           <h4>${(c.organizer_company || c.organizer_name || 'Naamloos').replace(/</g, '&lt;')}</h4>
           <div class="contract-meta">${c.event_type || 'Type onbekend'} — ${formatContractDate(c.event_date)}${c.venue_name ? ' — ' + c.venue_name : ''}</div>
-          <div class="contract-fee">${c.fee_amount ? 'Gage: ' + c.fee_amount : ''}</div>
+          <div class="contract-fee">${summarizeMusicianPayments(c.musician_payments)}</div>
         </div>
         <div class="contract-card-actions">
           <select class="contract-status-select" aria-label="Status wijzigen">
@@ -925,6 +1025,10 @@ document.addEventListener('DOMContentLoaded', () => {
           if (el) el.value = contract[field] ?? '';
         });
         document.getElementById('c-image-rights').checked = contract.image_rights !== false;
+        populateMusicianPayments(contract.musician_payments || []);
+        if (!contract.musician_payments || !contract.musician_payments.length) {
+          musicianPaymentRows.appendChild(makeMusicianPaymentBlock());
+        }
         contractSubmitBtn.textContent = 'Contract bijwerken';
         contractCancelBtn.hidden = false;
         contractForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -977,6 +1081,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
     payload.image_rights = document.getElementById('c-image-rights').checked;
+    payload.musician_payments = serializeMusicianPayments();
+    payload.uses_wita = payload.musician_payments.some(m => m.method === 'wita');
     payload.updated_at = new Date().toISOString();
 
     const existingId = document.getElementById('contract-id').value;
@@ -1009,9 +1115,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancellationPolicy = getContractText('contract_cancellation_policy');
     const imageRightsText = getContractText('contract_image_rights_text');
     const footerNote = getContractText('contract_footer_note');
+    const witaInstructions = getContractText('contract_wita_instructions');
+    const logoUrl = window.location.origin + '/assets/logo.jpg';
 
     const esc = (s) => (s || '').toString().replace(/</g, '&lt;');
     const row = (label, value) => value ? `<tr><th>${label}</th><td>${esc(value)}</td></tr>` : '';
+
+    const musicianPayments = c.musician_payments || [];
+    const musicianRows = musicianPayments.map(m => {
+      const sessionLines = (m.sessions || []).map(s =>
+        `${esc(s.type || 'Sessie')}${s.date ? ' — ' + formatContractDate(s.date) : ''}: ${esc(s.amount || '—')}${s.travel ? ' + € verplaatsing: ' + esc(s.travel) : ''}`
+      ).join('<br>');
+      return `<tr>
+        <td style="font-weight:600;">${esc(m.name)}</td>
+        <td>${esc(m.rrn)}</td>
+        <td>${esc(m.iban)}</td>
+        <td>${PAYMENT_METHOD_LABELS[m.method] || esc(m.method)}</td>
+        <td>${sessionLines}</td>
+      </tr>`;
+    }).join('');
 
     const win = window.open('', '_blank');
     if (!win) { showToast('Kon printvenster niet openen (pop-up geblokkeerd?).', true); return; }
@@ -1019,16 +1141,23 @@ document.addEventListener('DOMContentLoaded', () => {
     win.document.write(`<!DOCTYPE html>
 <html lang="nl"><head><meta charset="UTF-8"><title>Contract — ${esc(c.organizer_company || c.organizer_name)}</title>
 <style>
-  body{ font-family: Georgia, 'Times New Roman', serif; color:#1a1a1a; max-width:780px; margin:40px auto; padding:0 20px; line-height:1.55; }
-  h1{ font-size:1.6rem; border-bottom:2px solid #10203A; padding-bottom:14px; margin-bottom:6px; }
-  h2{ font-size:1.05rem; margin:30px 0 10px; color:#10203A; text-transform:uppercase; letter-spacing:.04em; }
-  .parties{ display:flex; justify-content:space-between; gap:30px; margin:20px 0 10px; font-size:.92rem; }
+  body{ font-family: Georgia, 'Times New Roman', serif; color:#1a1a1a; max-width:820px; margin:40px auto; padding:0 20px; line-height:1.55; }
+  .doc-header{ display:flex; align-items:center; gap:18px; border-bottom:3px solid #10203A; padding-bottom:18px; margin-bottom:6px; }
+  .doc-header img{ height:56px; width:auto; border-radius:4px; }
+  .doc-header h1{ font-size:1.5rem; margin:0; color:#10203A; }
+  .doc-header .subtitle{ font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; color:#B08D57; margin-top:2px; }
+  h2{ font-size:1.02rem; margin:28px 0 10px; color:#10203A; text-transform:uppercase; letter-spacing:.04em; border-bottom: 1px solid #e2ddd3; padding-bottom:6px; }
+  .parties{ display:flex; justify-content:space-between; gap:30px; margin:22px 0 10px; font-size:.92rem; }
   .parties div{ flex:1; }
-  table{ width:100%; border-collapse:collapse; font-size:.92rem; }
-  th{ text-align:left; width:220px; padding:6px 10px 6px 0; vertical-align:top; color:#444; font-weight:600; }
+  table{ width:100%; border-collapse:collapse; font-size:.9rem; }
+  th{ text-align:left; width:200px; padding:6px 10px 6px 0; vertical-align:top; color:#444; font-weight:600; }
   td{ padding:6px 0; vertical-align:top; }
-  .clause{ font-size:.88rem; color:#333; margin-top:8px; }
-  .sign-row{ display:flex; justify-content:space-between; gap:60px; margin-top:70px; }
+  .musician-table{ margin-top:6px; }
+  .musician-table th, .musician-table td{ border-bottom:1px solid #eee; padding:8px 10px; width:auto; font-weight:400; }
+  .musician-table th{ color:#666; font-size:.76rem; text-transform:uppercase; letter-spacing:.04em; }
+  .clause{ font-size:.87rem; color:#333; margin-top:8px; white-space:pre-line; }
+  .wita-box{ background:#f7f4ee; border:1px solid #e2ddd3; border-radius:6px; padding:16px 18px; font-size:.85rem; margin-top:10px; white-space:pre-line; }
+  .sign-row{ display:flex; justify-content:space-between; gap:60px; margin-top:60px; }
   .sign-box{ flex:1; }
   .sign-line{ border-top:1px solid #333; margin-top:60px; padding-top:6px; font-size:.82rem; }
   .footnote{ margin-top:50px; font-size:.76rem; color:#777; border-top:1px solid #ddd; padding-top:14px; }
@@ -1039,8 +1168,14 @@ document.addEventListener('DOMContentLoaded', () => {
 <body>
   <div class="no-print"><button onclick="window.print()">Afdrukken / opslaan als PDF</button></div>
 
-  <h1>Overeenkomst voor optreden</h1>
-  <p style="font-size:.85rem; color:#666;">Opgesteld op ${new Date().toLocaleDateString('nl-BE', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+  <div class="doc-header">
+    <img src="${logoUrl}" alt="${esc(companyName)}" onerror="this.style.display='none'">
+    <div>
+      <h1>Overeenkomst voor optreden</h1>
+      <div class="subtitle">${esc(companyName)}</div>
+    </div>
+  </div>
+  <p style="font-size:.85rem; color:#666; margin-top:14px;">Opgesteld op ${new Date().toLocaleDateString('nl-BE', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
 
   <div class="parties">
     <div><strong>Uitvoerder</strong><br>${esc(companyName)}${companyAddress ? '<br>' + esc(companyAddress) : ''}</div>
@@ -1060,15 +1195,25 @@ document.addEventListener('DOMContentLoaded', () => {
     ${row('Repertoire / opmerkingen', c.repertoire_notes)}
   </table>
 
-  <h2>Vergoeding</h2>
+  ${musicianRows ? `
+  <h2>Muzikanten &amp; vergoeding</h2>
+  <table class="musician-table">
+    <thead><tr><th>Naam</th><th>Rijksregisternr.</th><th>Rekeningnummer</th><th>Betaalwijze</th><th>Sessies &amp; bedrag</th></tr></thead>
+    <tbody>${musicianRows}</tbody>
+  </table>
+  ` : ''}
+
+  <h2>Betalingsvoorwaarden</h2>
   <table>
-    ${row('Gage', c.fee_amount)}
+    ${row('Totale vergoeding', c.fee_amount)}
     ${row('BTW', c.vat_note || vatDefault)}
     ${row('Voorschot', c.deposit_amount)}
     ${row('Voorschot te betalen voor', c.deposit_due)}
     ${row('Saldo te betalen voor', c.balance_due)}
-    ${row('Rekeningnummer', iban)}
+    ${row('Rekeningnummer (algemeen)', iban)}
   </table>
+
+  ${c.uses_wita && witaInstructions ? `<h2>Registratie via Working in the Arts</h2><div class="wita-box">${esc(witaInstructions)}</div>` : ''}
 
   <h2>Contactgegevens opdrachtgever</h2>
   <table>
