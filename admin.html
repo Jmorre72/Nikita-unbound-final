@@ -745,6 +745,8 @@
           <input type="text" id="musician-name" placeholder="Naam" required aria-label="Naam">
           <input type="text" id="musician-role" placeholder="Rol (bv. Lead zang)" required aria-label="Rol">
           <input type="number" id="musician-age" placeholder="Leeftijd (optioneel)" min="0" style="max-width:140px;" aria-label="Leeftijd">
+          <input type="text" id="musician-rrn" placeholder="Rijksregisternummer (optioneel, voor WITA)" style="flex:1; min-width:180px;" aria-label="Rijksregisternummer">
+          <input type="text" id="musician-iban" placeholder="Rekeningnummer / IBAN (optioneel)" style="flex:1; min-width:180px;" aria-label="Rekeningnummer">
           <textarea id="musician-bio" placeholder="Korte biografie" rows="2" style="flex-basis:100%;padding:10px 12px;border:1px solid rgba(16,32,58,.2);border-radius:3px;font-family:var(--font-body);font-size:.88rem;"></textarea>
           <div class="field" style="flex-basis:100%; margin-bottom:0;">
             <label for="musician-photo" style="display:block; font-size:.78rem; font-weight:600; margin-bottom:8px;">Foto (optioneel — zonder foto verschijnt een gekleurde letter)</label>
@@ -978,10 +980,11 @@
           <p class="field-hint" style="margin-bottom:14px;">Voeg per muzikant hun gegevens en vergoeding toe. Een repetitie op een aparte, echte kalenderdag telt als een volwaardige tweede prestatiedag onder Working in the Arts, met een eigen dagvergoeding (max. € 81,90 in 2026) en verplaatsingsvergoeding (max. € 23,40 in 2026).</p>
           <div id="musician-payment-rows"></div>
           <datalist id="known-musicians-list"></datalist>
-          <button type="button" id="add-musician-payment-btn" class="btn btn-outline-dark" style="margin-bottom:24px;">+ Muzikant toevoegen</button>
+          <button type="button" id="add-musician-payment-btn" class="btn btn-outline-dark" style="margin-bottom:14px;">+ Muzikant toevoegen</button>
+          <p class="mp-grand-total-row">Totaal alle muzikanten (incl. verplaatsingskosten): <span id="mp-grand-total">€ 0,00</span></p>
 
-          <div class="admin-form-grid">
-            <div class="field"><label for="c-fee-amount">Totale vergoeding (optioneel, ter info/samenvatting)</label><input type="text" id="c-fee-amount" placeholder="Wordt automatisch berekend, of vul zelf in"></div>
+          <div class="admin-form-grid" style="margin-top:24px;">
+            <div class="field"><label for="c-fee-amount">Totale vergoeding (wordt automatisch bijgehouden op basis van bovenstaande, mag je overschrijven)</label><input type="text" id="c-fee-amount" placeholder="Wordt automatisch berekend, of vul zelf in"></div>
             <div class="field"><label for="c-vat-note">BTW-vermelding</label><input type="text" id="c-vat-note" placeholder="Standaard wordt de ingestelde tekst hierboven gebruikt"></div>
             <div class="field"><label for="c-deposit-amount">Voorschot</label><input type="text" id="c-deposit-amount" placeholder="Bv. € 100"></div>
             <div class="field"><label for="c-deposit-due">Voorschot te betalen voor</label><input type="text" id="c-deposit-due" placeholder="Bv. 2 weken na ondertekening"></div>

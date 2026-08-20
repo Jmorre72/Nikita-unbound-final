@@ -270,6 +270,8 @@ create table if not exists musicians (
   photo_url text,
   photo_pos_x integer not null default 50,
   photo_pos_y integer not null default 50,
+  rrn text,
+  iban text,
   sort_order integer not null default 0,
   created_at timestamptz not null default now()
 );

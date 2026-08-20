@@ -206,6 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <input type="text" class="row-role" value="${(m.role || '').replace(/"/g, '&quot;')}" style="flex:1; min-width:140px;">
             <input type="number" class="row-age" value="${m.age ?? ''}" min="0" style="max-width:110px;" placeholder="Leeftijd">
           </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input type="text" class="row-rrn" value="${(m.rrn || '').replace(/"/g, '&quot;')}" placeholder="Rijksregisternummer (voor WITA)" style="flex:1; min-width:180px;">
+            <input type="text" class="row-iban" value="${(m.iban || '').replace(/"/g, '&quot;')}" placeholder="Rekeningnummer / IBAN" style="flex:1; min-width:180px;">
+          </div>
           <textarea class="row-bio" rows="2" style="padding:9px 11px; border:1px solid rgba(16,32,58,.18); border-radius:3px; font-family:var(--font-body); font-size:.86rem;">${m.bio || ''}</textarea>
           <div>
             <label style="display:block; font-size:.74rem; font-weight:600; margin-bottom:4px;">Foto wijzigen</label>
@@ -252,6 +256,8 @@ document.addEventListener('DOMContentLoaded', () => {
           role: row.querySelector('.row-role').value,
           age: ageVal === '' ? null : Number(ageVal),
           bio: row.querySelector('.row-bio').value,
+          rrn: row.querySelector('.row-rrn').value.trim(),
+          iban: row.querySelector('.row-iban').value.trim(),
           photo_pos_x: Number(frame.dataset.posX || 50),
           photo_pos_y: Number(frame.dataset.posY || 50)
         };
@@ -313,6 +319,8 @@ document.addEventListener('DOMContentLoaded', () => {
         role: document.getElementById('musician-role').value,
         age: ageVal === '' ? null : Number(ageVal),
         bio: document.getElementById('musician-bio').value,
+        rrn: document.getElementById('musician-rrn').value.trim(),
+        iban: document.getElementById('musician-iban').value.trim(),
         sort_order: nextOrder
       };
 
@@ -828,14 +836,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const PAYMENT_METHOD_LABELS = { wita: 'Working in the Arts (AKV)', regulier: 'Reguliere vergoeding' };
   const SESSION_TYPES = ['Optreden', 'Repetitie', 'Andere'];
 
-  let knownMusicianNames = [];
-  sb.from('musicians').select('name').then(({ data }) => {
+  let knownMusicians = [];
+  sb.from('musicians').select('name, rrn, iban').then(({ data }) => {
     if (data) {
-      knownMusicianNames = data.map(m => m.name).filter(Boolean);
+      knownMusicians = data.filter(m => m.name);
       const list = document.getElementById('known-musicians-list');
-      if (list) list.innerHTML = knownMusicianNames.map(n => `<option value="${n.replace(/"/g, '&quot;')}">`).join('');
+      if (list) list.innerHTML = knownMusicians.map(m => `<option value="${m.name.replace(/"/g, '&quot;')}">`).join('');
     }
   });
+
+  /* ---------- Bedragen: parsen ("€ 81,90" -> 81.9) en formatteren ---------- */
+  function parseEuroAmount(str) {
+    if (!str) return 0;
+    let s = String(str).replace(/[^0-9,.\-]/g, '').trim();
+    if (!s) return 0;
+    if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+    const n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
+  }
+  function formatEuroAmount(n) {
+    return '€ ' + n.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
 
   function makeSessionRow(session) {
     session = session || {};
@@ -848,10 +869,48 @@ document.addEventListener('DOMContentLoaded', () => {
       <input type="date" class="mps-date" value="${session.date || ''}" aria-label="Datum sessie">
       <input type="text" class="mps-amount" placeholder="Bedrag, bv. € 81,90" value="${(session.amount || '').replace(/"/g, '&quot;')}" aria-label="Bedrag">
       <input type="text" class="mps-travel" placeholder="Verplaatsing (optioneel, max. € 23,40)" value="${(session.travel || '').replace(/"/g, '&quot;')}" aria-label="Verplaatsingsvergoeding">
+      <span class="mps-total">€ 0,00</span>
       <button type="button" class="btn-remove-session" aria-label="Sessie verwijderen">✕</button>
     `;
-    row.querySelector('.btn-remove-session').addEventListener('click', () => row.remove());
+    row.querySelector('.btn-remove-session').addEventListener('click', () => {
+      const block = row.closest('.musician-payment-block');
+      row.remove();
+      updateMusicianSubtotal(block);
+    });
+    const totalEl = row.querySelector('.mps-total');
+    function recalcRow() {
+      const total = parseEuroAmount(row.querySelector('.mps-amount').value) + parseEuroAmount(row.querySelector('.mps-travel').value);
+      totalEl.textContent = formatEuroAmount(total);
+      updateMusicianSubtotal(row.closest('.musician-payment-block'));
+    }
+    row.querySelector('.mps-amount').addEventListener('input', recalcRow);
+    row.querySelector('.mps-travel').addEventListener('input', recalcRow);
+    recalcRow();
     return row;
+  }
+
+  function updateMusicianSubtotal(block) {
+    if (!block) return;
+    let subtotal = 0;
+    block.querySelectorAll('.mp-session-row').forEach(row => {
+      subtotal += parseEuroAmount(row.querySelector('.mps-amount').value) + parseEuroAmount(row.querySelector('.mps-travel').value);
+    });
+    const subtotalEl = block.querySelector('.mp-subtotal-value');
+    if (subtotalEl) subtotalEl.textContent = formatEuroAmount(subtotal);
+    updateContractGrandTotal();
+  }
+
+  function updateContractGrandTotal() {
+    let grandTotal = 0;
+    musicianPaymentRows.querySelectorAll('.musician-payment-block').forEach(block => {
+      block.querySelectorAll('.mp-session-row').forEach(row => {
+        grandTotal += parseEuroAmount(row.querySelector('.mps-amount').value) + parseEuroAmount(row.querySelector('.mps-travel').value);
+      });
+    });
+    const grandTotalEl = document.getElementById('mp-grand-total');
+    if (grandTotalEl) grandTotalEl.textContent = formatEuroAmount(grandTotal);
+    const feeInput = document.getElementById('c-fee-amount');
+    if (feeInput && grandTotal > 0) feeInput.value = formatEuroAmount(grandTotal);
   }
 
   function makeMusicianPaymentBlock(musician) {
@@ -872,6 +931,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       <p class="field-hint mp-sessions-label">Sessies (optreden, en eventueel een aparte repetitie op een andere datum):</p>
       <div class="mp-sessions"></div>
+      <p class="mp-subtotal">Subtotaal deze muzikant: <span class="mp-subtotal-value">€ 0,00</span></p>
       <div class="mp-block-actions">
         <button type="button" class="btn btn-outline-dark btn-add-session">+ Sessie toevoegen</button>
         <button type="button" class="btn btn-outline-dark btn-remove-musician">Muzikant verwijderen</button>
@@ -884,7 +944,22 @@ document.addEventListener('DOMContentLoaded', () => {
     block.querySelector('.btn-add-session').addEventListener('click', () => {
       sessionsContainer.appendChild(makeSessionRow({ type: 'Repetitie' }));
     });
-    block.querySelector('.btn-remove-musician').addEventListener('click', () => block.remove());
+    block.querySelector('.btn-remove-musician').addEventListener('click', () => {
+      block.remove();
+      updateContractGrandTotal();
+    });
+
+    // Automatisch rijksregisternummer + IBAN invullen zodra een bekende muzikant gekozen wordt
+    const nameInput = block.querySelector('.mp-name');
+    nameInput.addEventListener('input', () => {
+      const match = knownMusicians.find(m => m.name.trim().toLowerCase() === nameInput.value.trim().toLowerCase());
+      if (match) {
+        block.querySelector('.mp-rrn').value = match.rrn || '';
+        block.querySelector('.mp-iban').value = match.iban || '';
+      }
+    });
+
+    updateMusicianSubtotal(block);
     return block;
   }
 
@@ -1122,16 +1197,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const row = (label, value) => value ? `<tr><th>${label}</th><td>${esc(value)}</td></tr>` : '';
 
     const musicianPayments = c.musician_payments || [];
+    let contractGrandTotal = 0;
     const musicianRows = musicianPayments.map(m => {
-      const sessionLines = (m.sessions || []).map(s =>
-        `${esc(s.type || 'Sessie')}${s.date ? ' — ' + formatContractDate(s.date) : ''}: ${esc(s.amount || '—')}${s.travel ? ' + € verplaatsing: ' + esc(s.travel) : ''}`
-      ).join('<br>');
+      let musicianSubtotal = 0;
+      const sessionLines = (m.sessions || []).map(s => {
+        const sessionTotal = parseEuroAmount(s.amount) + parseEuroAmount(s.travel);
+        musicianSubtotal += sessionTotal;
+        return `${esc(s.type || 'Sessie')}${s.date ? ' — ' + formatContractDate(s.date) : ''}: ${esc(s.amount || '—')}${s.travel ? ' + verplaatsing ' + esc(s.travel) : ''} = <strong>${formatEuroAmount(sessionTotal)}</strong>`;
+      }).join('<br>');
+      contractGrandTotal += musicianSubtotal;
       return `<tr>
         <td style="font-weight:600;">${esc(m.name)}</td>
         <td>${esc(m.rrn)}</td>
         <td>${esc(m.iban)}</td>
         <td>${PAYMENT_METHOD_LABELS[m.method] || esc(m.method)}</td>
         <td>${sessionLines}</td>
+        <td style="font-weight:600; white-space:nowrap;">${formatEuroAmount(musicianSubtotal)}</td>
       </tr>`;
     }).join('');
 
@@ -1198,8 +1279,9 @@ document.addEventListener('DOMContentLoaded', () => {
   ${musicianRows ? `
   <h2>Muzikanten &amp; vergoeding</h2>
   <table class="musician-table">
-    <thead><tr><th>Naam</th><th>Rijksregisternr.</th><th>Rekeningnummer</th><th>Betaalwijze</th><th>Sessies &amp; bedrag</th></tr></thead>
+    <thead><tr><th>Naam</th><th>Rijksregisternr.</th><th>Rekeningnummer</th><th>Betaalwijze</th><th>Sessies &amp; bedrag</th><th>Subtotaal</th></tr></thead>
     <tbody>${musicianRows}</tbody>
+    <tfoot><tr><td colspan="5" style="text-align:right; font-weight:600; padding-top:12px; border-top:2px solid #10203A;">Totaal (incl. verplaatsingskosten)</td><td style="font-weight:700; padding-top:12px; border-top:2px solid #10203A; white-space:nowrap;">${formatEuroAmount(contractGrandTotal)}</td></tr></tfoot>
   </table>
   ` : ''}
 
