@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const sb = window.supabaseClient;
+  let currentAdminEmail = null;
 
   /* ---------- Sessiebeheer ---------- */
   sb.auth.getSession().then(({ data }) => {
@@ -44,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function showDashboard(session) {
     loginSection.hidden = true;
     dashboardSection.hidden = false;
+    currentAdminEmail = session.user.email;
     document.getElementById('user-email').textContent = session.user.email;
     loadTexts();
     loadMusicians();
@@ -53,6 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
     loadGigs();
     loadSongs();
     loadContracts();
+    loadActivityLog();
+    loadAdmins();
+    loadStatistics();
   }
 
   /* ---------- Inloggen / uitloggen ---------- */
@@ -105,6 +110,169 @@ document.addEventListener('DOMContentLoaded', () => {
     toastTimer = setTimeout(() => { toast.hidden = true; }, 3000);
   }
 
+  /* ---------- Activiteitenlogboek ---------- */
+  async function logActivity(action, details) {
+    try {
+      await sb.from('activity_log').insert({
+        admin_email: currentAdminEmail || null,
+        action,
+        details: details || null
+      });
+    } catch (err) {
+      console.warn('Kon activiteit niet loggen:', err);
+    }
+  }
+
+  async function loadActivityLog() {
+    const listEl = document.getElementById('admin-log-list');
+    if (!listEl) return;
+    try {
+      const { data, error } = await sb
+        .from('activity_log')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(200);
+      if (error) throw error;
+      renderActivityLog(data || []);
+    } catch (err) {
+      listEl.innerHTML = '<p class="no-results">Kon logboek niet laden.</p>';
+      console.warn('Kon activiteitenlogboek niet laden:', err);
+    }
+  }
+
+  function renderActivityLog(entries) {
+    const listEl = document.getElementById('admin-log-list');
+    if (!listEl) return;
+    if (!entries.length) {
+      listEl.innerHTML = '<p class="no-results">Nog geen activiteit geregistreerd.</p>';
+      return;
+    }
+    listEl.innerHTML = entries.map(entry => {
+      const d = new Date(entry.created_at);
+      const dateLabel = d.toLocaleDateString('nl-BE', { day: '2-digit', month: 'short', year: 'numeric' });
+      const timeLabel = d.toLocaleTimeString('nl-BE', { hour: '2-digit', minute: '2-digit' });
+      return `
+        <div class="admin-log-row">
+          <span class="admin-log-when">${dateLabel}<br>${timeLabel}</span>
+          <span class="admin-log-action">${(entry.action || '').replace(/</g, '&lt;')}</span>
+          <span class="admin-log-details">${(entry.details || '').replace(/</g, '&lt;')}</span>
+          <span class="admin-log-who">${(entry.admin_email || '—').replace(/</g, '&lt;')}</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  /* ---------- Beheerders ---------- */
+  function loadAdmins() {
+    const emailEl = document.getElementById('admins-current-email');
+    if (emailEl) emailEl.textContent = currentAdminEmail || '—';
+    // Om veiligheidsredenen kan de lijst van alle beheerders niet via de
+    // website zelf opgevraagd worden (vereist een geheime sleutel die nooit
+    // in de browser-code mag staan) — zie de uitleg in het tabblad zelf.
+  }
+
+  /* =========================================================
+     STATISTIEKEN
+     ========================================================= */
+  const COUNTRY_NAMES = {
+    BE: 'België', NL: 'Nederland', FR: 'Frankrijk', DE: 'Duitsland', GB: 'Verenigd Koninkrijk',
+    LU: 'Luxemburg', US: 'Verenigde Staten', ES: 'Spanje', IT: 'Italië', PT: 'Portugal',
+    IE: 'Ierland', CH: 'Zwitserland', AT: 'Oostenrijk', PL: 'Polen', SE: 'Zweden',
+    NO: 'Noorwegen', DK: 'Denemarken', FI: 'Finland', CA: 'Canada', AU: 'Australië',
+    BR: 'Brazilië', IN: 'India', CN: 'China', JP: 'Japan', ZA: 'Zuid-Afrika',
+    RO: 'Roemenië', TR: 'Turkije', MA: 'Marokko', GR: 'Griekenland'
+  };
+  function statsEsc(s) { return (s == null ? '' : String(s)).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  function countryName(code) {
+    if (!code) return 'Onbekend';
+    return COUNTRY_NAMES[code] || code;
+  }
+
+  async function loadStatistics() {
+    const todayEl = document.getElementById('stats-today');
+    const sevenEl = document.getElementById('stats-7days');
+    const thirtyEl = document.getElementById('stats-30days');
+    const chartEl = document.getElementById('stats-daily-chart');
+    const pagesEl = document.getElementById('stats-pages-table');
+    const countryEl = document.getElementById('stats-country-table');
+    if (!todayEl || !chartEl) return;
+
+    try {
+      const since = new Date();
+      since.setDate(since.getDate() - 29);
+      since.setHours(0, 0, 0, 0);
+
+      const { data, error } = await sb
+        .from('page_views')
+        .select('created_at, page, country')
+        .gte('created_at', since.toISOString())
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      const rows = data || [];
+
+      const now = new Date();
+      const todayStr = now.toDateString();
+      const sevenDaysAgo = new Date(now);
+      sevenDaysAgo.setDate(now.getDate() - 7);
+
+      let todayCount = 0;
+      let sevenCount = 0;
+      const dayCounts = {};
+      const pageCounts = {};
+      const countryCounts = {};
+
+      rows.forEach(r => {
+        const d = new Date(r.created_at);
+        const dayKey = d.toISOString().slice(0, 10);
+        dayCounts[dayKey] = (dayCounts[dayKey] || 0) + 1;
+        if (d.toDateString() === todayStr) todayCount++;
+        if (d >= sevenDaysAgo) sevenCount++;
+        const pageName = r.page || 'onbekend';
+        pageCounts[pageName] = (pageCounts[pageName] || 0) + 1;
+        const c = r.country || 'onbekend';
+        countryCounts[c] = (countryCounts[c] || 0) + 1;
+      });
+
+      todayEl.textContent = todayCount;
+      sevenEl.textContent = sevenCount;
+      thirtyEl.textContent = rows.length;
+
+      const days = [];
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - i);
+        days.push(d.toISOString().slice(0, 10));
+      }
+      const maxCount = Math.max(1, ...days.map(d => dayCounts[d] || 0));
+
+      if (!rows.length) {
+        chartEl.innerHTML = '<p class="stats-bar-empty">Nog geen bezoeken geregistreerd.</p>';
+      } else {
+        chartEl.innerHTML = days.map(d => {
+          const count = dayCounts[d] || 0;
+          const heightPct = Math.max(2, Math.round((count / maxCount) * 100));
+          const label = new Date(d + 'T00:00:00').toLocaleDateString('nl-BE', { day: '2-digit', month: '2-digit' });
+          return `<div class="stats-bar" style="height:${heightPct}%;" title="${label}: ${count} bezoek(en)"></div>`;
+        }).join('');
+      }
+
+      const pageEntries = Object.entries(pageCounts).sort((a, b) => b[1] - a[1]);
+      pagesEl.innerHTML = pageEntries.length
+        ? `<table><thead><tr><th>Pagina</th><th>Bezoeken</th></tr></thead><tbody>${pageEntries.map(([p, c]) => `<tr><td>${statsEsc(p)}</td><td>${c}</td></tr>`).join('')}</tbody></table>`
+        : '<p class="no-results">Nog geen gegevens.</p>';
+
+      const countryEntries = Object.entries(countryCounts).sort((a, b) => b[1] - a[1]);
+      countryEl.innerHTML = countryEntries.length
+        ? `<table><thead><tr><th>Land</th><th>Bezoeken</th></tr></thead><tbody>${countryEntries.map(([c, n]) => `<tr><td>${statsEsc(countryName(c === 'onbekend' ? null : c))}</td><td>${n}</td></tr>`).join('')}</tbody></table>`
+        : '<p class="no-results">Nog geen gegevens.</p>';
+
+    } catch (err) {
+      console.warn('Kon statistieken niet laden:', err);
+      chartEl.innerHTML = '<p class="stats-bar-empty">Kon statistieken niet laden.</p>';
+    }
+  }
+
   /* =========================================================
      TEKSTEN
      ========================================================= */
@@ -128,6 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const { error } = await sb.from('site_texts').upsert({ key, value, updated_at: new Date().toISOString() });
       btn.disabled = false;
       showToast(error ? 'Bewaren mislukt.' : 'Bewaard.', Boolean(error));
+      if (!error) logActivity('bijgewerkt', `Tekst: ${key}`);
     });
   });
 
@@ -269,6 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const { error } = await sb.from('musicians').update(updateFields).eq('id', row.dataset.musicianId);
           if (error) throw error;
           showToast('Muzikant bewaard.');
+          logActivity('bijgewerkt', `Muzikant: ${updateFields.name}`);
           loadMusicians();
         } catch (err) {
           errorEl.textContent = 'Bewaren mislukt: ' + (err.message || err);
@@ -284,10 +454,12 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', async () => {
         if (!confirm('Deze muzikant verwijderen?')) return;
         const row = btn.closest('[data-musician-id]');
+        const musicianName = row.querySelector('.row-name').value;
         const { error } = await sb.from('musicians').delete().eq('id', row.dataset.musicianId);
         if (error) { showToast('Verwijderen mislukt.', true); return; }
         row.remove();
         showToast('Muzikant verwijderd.');
+        logActivity('verwijderd', `Muzikant: ${musicianName}`);
       });
     });
   }
@@ -338,6 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
       addPositionFrame.dataset.posX = 50;
       addPositionFrame.dataset.posY = 50;
       showToast('Muzikant toegevoegd.');
+      logActivity('aangemaakt', `Muzikant: ${newMusician.name}`);
       loadMusicians();
     } catch (err) {
       errorEl.textContent = 'Toevoegen mislukt: ' + (err.message || err);
@@ -377,11 +550,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!confirm('Deze foto verwijderen?')) return;
         const card = btn.closest('[data-photo-id]');
         const id = card.dataset.photoId;
+        const caption = card.querySelector('.admin-photo-caption').textContent.trim();
         btn.disabled = true;
         const { error } = await sb.from('photos').delete().eq('id', id);
         if (error) { showToast('Verwijderen mislukt.', true); btn.disabled = false; return; }
         card.remove();
         showToast('Foto verwijderd.');
+        logActivity('verwijderd', `Foto: ${caption}`);
       });
     });
   }
@@ -420,8 +595,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (insertError) throw insertError;
 
       fileInput.value = '';
+      const savedCaption = captionInput.value.trim();
       captionInput.value = '';
       showToast('Foto toegevoegd.');
+      logActivity('aangemaakt', `Foto: ${savedCaption || file.name}`);
       loadPhotos();
     } catch (err) {
       errorEl.textContent = 'Uploaden mislukt: ' + (err.message || err);
@@ -467,13 +644,15 @@ document.addEventListener('DOMContentLoaded', () => {
     trackList.querySelectorAll('.btn-save-track').forEach(btn => {
       btn.addEventListener('click', async () => {
         const row = btn.closest('[data-track-id]');
+        const title = row.querySelector('.row-title').value;
         btn.disabled = true;
         const { error } = await sb.from('tracks').update({
-          title: row.querySelector('.row-title').value,
+          title: title,
           meta: row.querySelector('.row-meta').value
         }).eq('id', row.dataset.trackId);
         btn.disabled = false;
         showToast(error ? 'Bewaren mislukt.' : 'Nummer bewaard.', Boolean(error));
+        if (!error) logActivity('bijgewerkt', `Muziek: ${title}`);
       });
     });
 
@@ -481,10 +660,12 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', async () => {
         if (!confirm('Dit nummer verwijderen?')) return;
         const row = btn.closest('[data-track-id]');
+        const title = row.querySelector('.row-title').value;
         const { error } = await sb.from('tracks').delete().eq('id', row.dataset.trackId);
         if (error) { showToast('Verwijderen mislukt.', true); return; }
         row.remove();
         showToast('Nummer verwijderd.');
+        logActivity('verwijderd', `Muziek: ${title}`);
       });
     });
   }
@@ -524,8 +705,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       if (insertError) throw insertError;
 
+      const savedTitle = titleInput.value.trim();
       e.target.reset();
       showToast('Nummer toegevoegd.');
+      logActivity('aangemaakt', `Muziek: ${savedTitle}`);
       loadTracks();
     } catch (err) {
       errorEl.textContent = 'Uploaden mislukt: ' + (err.message || err) + ' (bestaat de opslagruimte "audio" al?)';
@@ -590,13 +773,15 @@ document.addEventListener('DOMContentLoaded', () => {
     videoList.querySelectorAll('.btn-save-video').forEach(btn => {
       btn.addEventListener('click', async () => {
         const row = btn.closest('[data-video-id]');
+        const title = row.querySelector('.row-title').value;
         btn.disabled = true;
         const { error } = await sb.from('videos').update({
-          title: row.querySelector('.row-title').value,
+          title: title,
           description: row.querySelector('.row-desc').value
         }).eq('id', row.dataset.videoId);
         btn.disabled = false;
         showToast(error ? 'Bewaren mislukt.' : 'Video bewaard.', Boolean(error));
+        if (!error) logActivity('bijgewerkt', `Video: ${title}`);
       });
     });
 
@@ -604,10 +789,12 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', async () => {
         if (!confirm('Deze video verwijderen?')) return;
         const row = btn.closest('[data-video-id]');
+        const title = row.querySelector('.row-title').value;
         const { error } = await sb.from('videos').delete().eq('id', row.dataset.videoId);
         if (error) { showToast('Verwijderen mislukt.', true); return; }
         row.remove();
         showToast('Video verwijderd.');
+        logActivity('verwijderd', `Video: ${title}`);
       });
     });
   }
@@ -662,11 +849,13 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       if (insertError) throw insertError;
 
+      const savedTitle = titleInput.value.trim();
       e.target.reset();
       videoEmbedField.hidden = false;
       videoFileField.hidden = true;
       urlInput.required = true;
       showToast('Video toegevoegd.');
+      logActivity('aangemaakt', `Video: ${savedTitle}`);
       loadVideos();
     } catch (err) {
       errorEl.textContent = 'Toevoegen mislukt: ' + (err.message || err) + (sourceType === 'upload' ? ' (bestaat de opslagruimte "videos" al?)' : '');
@@ -712,16 +901,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const row = btn.closest('[data-gig-id]');
         const id = row.dataset.gigId;
         const status = row.querySelector('.row-status').value;
+        const title = row.querySelector('.row-title').value;
         btn.disabled = true;
         const { error } = await sb.from('gigs').update({
           gig_date: row.querySelector('.row-date').value,
-          title: row.querySelector('.row-title').value,
+          title: title,
           location: row.querySelector('.row-location').value,
           status,
           status_label: status === 'open' ? 'Vrij toegankelijk' : 'Besloten'
         }).eq('id', id);
         btn.disabled = false;
         showToast(error ? 'Bewaren mislukt.' : 'Optreden bewaard.', Boolean(error));
+        if (!error) logActivity('bijgewerkt', `Optreden: ${title}`);
       });
     });
 
@@ -729,10 +920,12 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', async () => {
         if (!confirm('Dit optreden verwijderen?')) return;
         const row = btn.closest('[data-gig-id]');
+        const title = row.querySelector('.row-title').value;
         const { error } = await sb.from('gigs').delete().eq('id', row.dataset.gigId);
         if (error) { showToast('Verwijderen mislukt.', true); return; }
         row.remove();
         showToast('Optreden verwijderd.');
+        logActivity('verwijderd', `Optreden: ${title}`);
       });
     });
   }
@@ -740,9 +933,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('gig-add-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const status = document.getElementById('gig-status').value;
+    const title = document.getElementById('gig-title').value;
     const { error } = await sb.from('gigs').insert({
       gig_date: document.getElementById('gig-date').value,
-      title: document.getElementById('gig-title').value,
+      title: title,
       location: document.getElementById('gig-location').value,
       status,
       status_label: status === 'open' ? 'Vrij toegankelijk' : 'Besloten'
@@ -750,6 +944,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (error) { showToast('Toevoegen mislukt.', true); return; }
     e.target.reset();
     showToast('Optreden toegevoegd.');
+    logActivity('aangemaakt', `Optreden: ${title}`);
     loadGigs();
   });
 
@@ -785,14 +980,16 @@ document.addEventListener('DOMContentLoaded', () => {
     songList.querySelectorAll('.btn-save-song').forEach(btn => {
       btn.addEventListener('click', async () => {
         const row = btn.closest('[data-song-id]');
+        const title = row.querySelector('.row-title').value;
         btn.disabled = true;
         const { error } = await sb.from('songs').update({
-          title: row.querySelector('.row-title').value,
+          title: title,
           artist: row.querySelector('.row-artist').value,
           decade: row.querySelector('.row-decade').value
         }).eq('id', row.dataset.songId);
         btn.disabled = false;
         showToast(error ? 'Bewaren mislukt.' : 'Nummer bewaard.', Boolean(error));
+        if (!error) logActivity('bijgewerkt', `Nummer: ${title}`);
       });
     });
 
@@ -800,18 +997,21 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', async () => {
         if (!confirm('Dit nummer verwijderen?')) return;
         const row = btn.closest('[data-song-id]');
+        const title = row.querySelector('.row-title').value;
         const { error } = await sb.from('songs').delete().eq('id', row.dataset.songId);
         if (error) { showToast('Verwijderen mislukt.', true); return; }
         row.remove();
         showToast('Nummer verwijderd.');
+        logActivity('verwijderd', `Nummer: ${title}`);
       });
     });
   }
 
   document.getElementById('song-add-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const title = document.getElementById('song-title').value;
     const { error } = await sb.from('songs').insert({
-      title: document.getElementById('song-title').value,
+      title: title,
       artist: document.getElementById('song-artist').value,
       decade: document.getElementById('song-decade').value
     });
@@ -819,6 +1019,7 @@ document.addEventListener('DOMContentLoaded', () => {
     e.target.reset();
     document.getElementById('song-decade').value = '2010s';
     showToast('Nummer toegevoegd.');
+    logActivity('aangemaakt', `Nummer: ${title}`);
     loadSongs();
   });
 
@@ -1086,6 +1287,9 @@ document.addEventListener('DOMContentLoaded', () => {
         badge.className = 'contract-status-badge ' + sel.value;
         badge.textContent = STATUS_LABELS[sel.value];
         showToast('Status bijgewerkt.');
+        const contract = contracts.find(c => c.id === card.dataset.contractId);
+        const contractLabel = contract ? (contract.organizer_name || contract.organizer_company || 'naamloos') : card.dataset.contractId;
+        logActivity('status gewijzigd', `Contract: ${contractLabel} → ${STATUS_LABELS[sel.value]}`);
       });
     });
 
@@ -1114,9 +1318,12 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', async () => {
         if (!confirm('Dit contract definitief verwijderen?')) return;
         const id = btn.closest('[data-contract-id]').dataset.contractId;
+        const contract = contracts.find(c => c.id === id);
+        const contractLabel = contract ? (contract.organizer_name || contract.organizer_company || 'naamloos') : id;
         const { error } = await sb.from('contracts').delete().eq('id', id);
         if (error) { showToast('Verwijderen mislukt.', true); return; }
         showToast('Contract verwijderd.');
+        logActivity('verwijderd', `Contract: ${contractLabel}`);
         loadContracts();
       });
     });
@@ -1171,6 +1378,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (error) throw error;
       showToast(existingId ? 'Contract bijgewerkt.' : 'Contract opgeslagen.');
+      logActivity(existingId ? 'bijgewerkt' : 'aangemaakt', `Contract: ${payload.organizer_name || payload.organizer_company || 'naamloos'}`);
       resetContractForm();
       loadContracts();
     } catch (err) {

@@ -65,6 +65,9 @@
         <button class="tab-btn" data-tab="kalender" type="button">Kalender</button>
         <button class="tab-btn" data-tab="repertoire" type="button">Repertoire</button>
         <button class="tab-btn" data-tab="contracten" type="button">Contracten</button>
+        <button class="tab-btn" data-tab="logboek" type="button">Logboek</button>
+        <button class="tab-btn" data-tab="statistieken" type="button">Statistieken</button>
+        <button class="tab-btn" data-tab="beheerders" type="button">Beheerders</button>
       </nav>
 
       <!-- ---------- TEKSTEN ---------- -->
@@ -1018,6 +1021,84 @@
 
         <h3 class="admin-form-section-title" style="margin-top:44px;">Opgeslagen contracten</h3>
         <div class="admin-contract-list" id="admin-contract-list"></div>
+      </div>
+
+      <!-- ---------- LOGBOEK ---------- -->
+      <div class="tab-panel" data-tab-panel="logboek" hidden>
+        <p class="lead-text">Overzicht van alle wijzigingen die via dit beheerpaneel zijn uitgevoerd — wie, wat, en wanneer. Dit logboek kan enkel aangevuld worden, niet aangepast of gewist, zodat het betrouwbaar blijft.</p>
+        <div class="admin-log-list" id="admin-log-list"></div>
+      </div>
+
+      <!-- ---------- STATISTIEKEN ---------- -->
+      <div class="tab-panel" data-tab-panel="statistieken" hidden>
+        <p class="lead-text">Een grof, volledig anoniem beeld van het aantal websitebezoeken — geen cookies, geen IP-adressen, geen enkel persoonsgegeven. Enkel bruikbaar zodra de site op Cloudflare Pages staat (voor de landen) en/of gekoppeld is aan Supabase (voor de tellingen).</p>
+
+        <div class="stats-summary-row">
+          <div class="stats-summary-card">
+            <span class="stats-summary-value" id="stats-today">—</span>
+            <span class="stats-summary-label">Bezoeken vandaag</span>
+          </div>
+          <div class="stats-summary-card">
+            <span class="stats-summary-value" id="stats-7days">—</span>
+            <span class="stats-summary-label">Laatste 7 dagen</span>
+          </div>
+          <div class="stats-summary-card">
+            <span class="stats-summary-value" id="stats-30days">—</span>
+            <span class="stats-summary-label">Laatste 30 dagen</span>
+          </div>
+        </div>
+
+        <h3 class="admin-form-section-title" style="margin-top:38px;">Bezoeken per dag (laatste 30 dagen)</h3>
+        <div class="stats-bar-chart" id="stats-daily-chart"></div>
+
+        <h3 class="admin-form-section-title" style="margin-top:38px;">Meest bezochte pagina's</h3>
+        <div class="stats-table-wrap" id="stats-pages-table"></div>
+
+        <h3 class="admin-form-section-title" style="margin-top:38px;">Bezoeken per land</h3>
+        <div class="stats-table-wrap" id="stats-country-table"></div>
+        <p class="field-hint" style="margin-top:10px;">Landen worden enkel geregistreerd wanneer de site op Cloudflare Pages draait. Op andere hosting telt een bezoek gewoon mee, maar zonder land.</p>
+      </div>
+
+      <!-- ---------- BEHEERDERS ---------- -->
+      <div class="tab-panel" data-tab-panel="beheerders" hidden>
+        <p class="lead-text">Wie er kan inloggen op dit beheerpaneel, wordt rechtstreeks in Supabase beheerd — niet op deze pagina. Dat is een bewuste, veilige keuze: een nieuwe beheerder aanmaken vanuit de website zelf zou betekenen dat iedereen die de site bezoekt in theorie een account zou kunnen aanmaken, met toegang tot alle contracten en persoonsgegevens. Door dit via het Supabase-dashboard te doen, bepaal jij als enige wie er toegang krijgt.</p>
+
+        <div class="admin-current-user-box">
+          <p class="field-hint" style="margin-bottom:6px;">Je bent momenteel ingelogd als:</p>
+          <p style="font-weight:600; font-size:1.05rem;" id="admins-current-email">—</p>
+        </div>
+
+        <h3 class="admin-form-section-title" style="margin-top:34px;">Nieuwe beheerder toevoegen</h3>
+        <div class="steps-list" style="margin-top:10px;">
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div>
+              <h3>Ga naar je Supabase-project</h3>
+              <p>Open <strong>supabase.com</strong>, log in, en open het project van Nikita Unbound.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div>
+              <h3>Authentication → Users → Add user</h3>
+              <p>Vul het e-mailadres en wachtwoord van de nieuwe beheerder in, en vink <strong>Auto Confirm User</strong> aan.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num"></div>
+            <div>
+              <h3>Klaar</h3>
+              <p>Die persoon kan meteen inloggen op <code>admin.html</code> met die gegevens — met exact dezelfde volledige toegang als jij.</p>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="admin-form-section-title" style="margin-top:34px;">Toegang intrekken</h3>
+        <p>Ga naar <strong>Authentication → Users</strong>, klik op de betreffende gebruiker, en kies <strong>Delete user</strong>. Die persoon kan dan niet meer inloggen.</p>
+
+        <div class="trio-note mt-40" style="border-color: rgba(16,32,58,.15); color: var(--navy);">
+          <strong>Waarom geen lijst van huidige beheerders hier?</strong> Om diezelfde veiligheidsreden kan de website zelf niet opvragen wie er allemaal een account heeft — enkel via het Supabase-dashboard (Authentication → Users) zie je de volledige lijst.
+        </div>
       </div>
 
     </section>

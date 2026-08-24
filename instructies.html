@@ -147,24 +147,32 @@ window.SUPABASE_ANON_KEY = "jouw-anon-public-of-publishable-key";</pre>
   <div class="container">
     <div class="section-head reveal">
       <p class="eyebrow on-dark">Website hosten</p>
-      <h2>Je site online zetten met Netlify (gratis)</h2>
-      <p class="lead-text">Dit is los van Supabase — dit zet de websitebestanden zelf online, zodat ze wereldwijd bereikbaar zijn.</p>
+      <h2>Je site online zetten met Cloudflare Pages (gratis)</h2>
+      <p class="lead-text">Dit is los van Supabase — dit zet de websitebestanden zelf online, zodat ze wereldwijd bereikbaar zijn. Cloudflare Pages is ook nodig voor de landregistratie bij de bezoekersstatistieken (tabblad "Statistieken" in het beheerpaneel).</p>
     </div>
     <div class="steps-list">
 
       <div class="step-item">
         <div class="step-num"></div>
         <div>
-          <h3>Maak een gratis Netlify-account</h3>
-          <p>Ga naar <strong>app.netlify.com</strong> en meld je aan, bijvoorbeeld met je Google-account.</p>
+          <h3>Maak een gratis Cloudflare-account</h3>
+          <p>Ga naar <strong>dash.cloudflare.com/sign-up</strong> en maak een account aan.</p>
         </div>
       </div>
 
       <div class="step-item">
         <div class="step-num"></div>
         <div>
-          <h3>Sleep je websitemap naar Netlify</h3>
-          <p>Op het startscherm zie je een vak <strong>"Deploy manually"</strong>. Sleep daar de volledige map met je websitebestanden (met daarin <code>index.html</code>, <code>css</code>, <code>js</code>, <code>assets</code>, ...) naartoe.</p>
+          <h3>Nieuw Pages-project aanmaken</h3>
+          <p>Ga in het dashboard naar <strong>Workers & Pages</strong> → <strong>Create</strong> → tabblad <strong>Pages</strong> → <strong>Upload assets</strong>. Geef je project een naam (bv. <code>nikita-unbound</code>).</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Sleep je websitemap naar het upload-vak</h3>
+          <p>Sleep de volledige map met je websitebestanden (met daarin <code>index.html</code>, <code>css</code>, <code>js</code>, <code>assets</code>, <code>functions</code>, ...) naar het uploadvlak, en klik op <strong>Deploy site</strong>.</p>
         </div>
       </div>
 
@@ -172,15 +180,24 @@ window.SUPABASE_ANON_KEY = "jouw-anon-public-of-publishable-key";</pre>
         <div class="step-num"></div>
         <div>
           <h3>Je site staat meteen online</h3>
-          <p>Na een paar seconden krijg je een adres zoals <code>https://nikita-unbound-a1b2c3.netlify.app</code> — meteen bereikbaar voor iedereen. Een eigen domeinnaam (bv. nikita-unbound.be) kan je later nog koppelen via "Domain settings" in Netlify.</p>
+          <p>Na enkele seconden krijg je een adres zoals <code>https://nikita-unbound.pages.dev</code> — meteen bereikbaar voor iedereen. Een eigen domeinnaam (www.nikita-unbound.be) koppel je later via <strong>Custom domains</strong> in je projectinstellingen.</p>
         </div>
       </div>
 
       <div class="step-item">
         <div class="step-num"></div>
         <div>
-          <h3>Bij elke wijziging: opnieuw slepen</h3>
-          <p>Pas je later een bestand aan (bijvoorbeeld <code>js/supabase-config.js</code> na het instellen van Supabase hieronder), sleep dan gewoon de volledige map opnieuw naar hetzelfde Netlify-project. Dat vervangt de oude versie in enkele seconden.</p>
+          <h3>Omgevingsvariabelen instellen (voor bezoekerslanden)</h3>
+          <p>Ga naar je project → <strong>Settings</strong> → <strong>Environment variables</strong> → voeg twee variabelen toe: <code>SUPABASE_URL</code> en <code>SUPABASE_ANON_KEY</code>, met exact dezelfde waarden die je ook in <code>js/supabase-config.js</code> hebt staan. Klik op <strong>Save</strong>, en maak daarna een nieuwe deployment (zie volgende stap) zodat de wijziging actief wordt.</p>
+          <p class="field-hint">Sla je deze stap over, dan telt de website je bezoeken gewoon mee — enkel de landen blijven dan leeg.</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num"></div>
+        <div>
+          <h3>Bij elke wijziging: nieuwe deployment</h3>
+          <p>Pas je later een bestand aan, ga dan naar je project → tabblad <strong>Deployments</strong> → <strong>Create deployment</strong>, en sleep de volledige (bijgewerkte) map opnieuw naar het uploadvlak. Dat vervangt de oude versie in enkele seconden.</p>
         </div>
       </div>
 

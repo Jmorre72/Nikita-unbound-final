@@ -521,3 +521,47 @@ insert into site_texts (key, value) values
 Meer info: www.workinginthearts.be'),
   ('contract_footer_note', 'Dit document is met zorg opgesteld als praktische overeenkomst tussen beide partijen, maar vormt geen juridisch bindend model opgesteld door een jurist. Bij twijfel raden we aan dit te laten nakijken.')
 on conflict (key) do nothing;
+
+-- =========================================================
+-- Activiteitenlogboek — houdt bij wie wat wijzigde via het
+-- beheerpaneel. Enkel leesbaar/schrijfbaar voor ingelogde
+-- beheerders, nooit publiek (en nooit aanpasbaar/verwijderbaar
+-- achteraf — een logboek moet betrouwbaar blijven).
+-- =========================================================
+create table if not exists activity_log (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  admin_email text,
+  action text not null,
+  details text
+);
+
+alter table activity_log enable row level security;
+
+drop policy if exists "Beheerder leest - activity_log" on activity_log;
+create policy "Beheerder leest - activity_log" on activity_log for select to authenticated using (true);
+
+drop policy if exists "Beheerder schrijft - activity_log insert" on activity_log;
+create policy "Beheerder schrijft - activity_log insert" on activity_log for insert to authenticated with check (true);
+
+-- =========================================================
+-- Websitebezoeken — lichtgewicht, anonieme paginateller.
+-- Geen cookies, geen IP-adressen, geen persoonsgegevens: enkel
+-- een tijdstip en welke pagina bezocht werd. Bezoekers zelf
+-- (niet ingelogd) mogen een bezoek registreren; enkel de
+-- beheerder kan de resultaten uitlezen.
+-- =========================================================
+create table if not exists page_views (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  page text not null,
+  country text
+);
+
+alter table page_views enable row level security;
+
+drop policy if exists "Iedereen registreert - page_views" on page_views;
+create policy "Iedereen registreert - page_views" on page_views for insert with check (true);
+
+drop policy if exists "Beheerder leest - page_views" on page_views;
+create policy "Beheerder leest - page_views" on page_views for select to authenticated using (true);

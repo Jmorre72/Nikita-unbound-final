@@ -493,4 +493,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  /* ---------- Anonieme paginateller ----------
+     Geen cookies, geen IP-adres, geen enkel persoonsgegeven —
+     enkel een tijdstip, de paginanaam en (indien beschikbaar
+     via Cloudflare) het land, om in het beheerpaneel een grof
+     beeld te geven van hoeveel bezoeken de site krijgt en van
+     waar. Enkel op publieke pagina's, niet in het beheerpaneel. */
+  const NON_TRACKED_PAGES = ['admin.html', 'instructies.html'];
+  const currentPage = (window.location.pathname.split('/').pop() || 'home.html');
+  if (!NON_TRACKED_PAGES.includes(currentPage)) {
+    // Probeer eerst via de Cloudflare Pages Function (geeft ook het land mee,
+    // zonder ooit een IP-adres op te slaan). Bestaat die niet (bv. andere
+    // hosting, of nog niet gekoppeld), val dan stil terug op een gewone
+    // telling rechtstreeks naar Supabase — zonder land, maar telt wel mee.
+    fetch('/log-visit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page: currentPage })
+    }).then(res => {
+      if (!res.ok) throw new Error('log-visit endpoint niet beschikbaar');
+    }).catch(() => {
+      if (window.supabaseClient) {
+        window.supabaseClient.from('page_views').insert({ page: currentPage })
+          .then(() => {})
+          .catch(() => {});
+      }
+    });
+  }
+
 });
