@@ -40,6 +40,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         el.innerHTML = map[key];
       }
     });
+
+    // Achtergrondfoto (hero / pagina-koppen): CSS-variabele instellen
+    // zodra er via het beheerpaneel een aangepaste foto is ingesteld.
+    if (map.hero_background_url && map.hero_background_url.trim()) {
+      document.documentElement.style.setProperty('--hero-bg-url', `url("${map.hero_background_url.trim()}")`);
+    }
   } catch (err) {
     console.warn('Kon site-teksten niet laden uit Supabase:', err);
   }

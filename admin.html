@@ -73,6 +73,23 @@
       <!-- ---------- TEKSTEN ---------- -->
       <div class="tab-panel" data-tab-panel="teksten">
         <p class="lead-text">Pas hier alle teksten op de website aan, gegroepeerd per pagina. Klik op een paginanaam om die open- of dicht te klappen. Wijzigingen zijn meteen zichtbaar voor bezoekers na het bewaren.</p>
+
+        <div class="admin-bg-photo-block">
+          <h3 class="admin-form-section-title" style="margin-top:0;">Achtergrondfoto (startpagina &amp; paginakoppen)</h3>
+          <p class="field-hint" style="margin-bottom:16px;">Deze foto verschijnt op de grote hero-sectie van de startpagina, en verkleind op elke andere pagina bovenaan. Geen eigen foto ingesteld? Dan blijft de huidige standaardfoto gewoon staan.</p>
+          <div class="admin-bg-photo-preview-row">
+            <img id="bg-photo-preview" class="admin-bg-photo-preview" src="assets/hero-photo.jpg" alt="Huidige achtergrondfoto">
+            <div>
+              <input type="file" id="bg-photo-file" accept="image/*">
+              <div style="margin-top:10px; display:flex; gap:10px;">
+                <button type="button" class="btn btn-gold" id="bg-photo-upload-btn">Achtergrondfoto wijzigen</button>
+                <button type="button" class="btn btn-outline-dark" id="bg-photo-reset-btn">Terugzetten naar standaard</button>
+              </div>
+              <p id="bg-photo-error" class="field-error" style="display:none; margin-top:10px;"></p>
+            </div>
+          </div>
+        </div>
+
         <div class="admin-text-groups">
         <details class="admin-text-group" open>
           <summary>Overal (navigatie &amp; footer)</summary>

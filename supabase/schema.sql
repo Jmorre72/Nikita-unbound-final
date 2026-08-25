@@ -155,6 +155,7 @@ insert into site_texts (key, value) values
   ('footer_copyright', 'Nikita Unbound. Alle rechten voorbehouden.'),
   ('footer_tagline', 'Akoestisch • Intiem • Onbegrensd'),
   ('splash_cta', 'Kom binnen, en ontdek Nikita Unbound.'),
+  ('hero_background_url', ''),
   ('hero_eyebrow', 'Live muziek op maat van uw gelegenheid'),
   ('hero_title', 'Sfeervolle klanken,<br><em>onbegrensd</em> gevoel.'),
   ('hero_lede', 'Nikita Unbound giet tijdloze nummers van de jaren 60 tot vandaag in een intiem, akoestisch jasje. Warme stem, meeslepende percussie — de perfecte soundtrack voor uw trouwreceptie, tuinfeest of bedrijfsevent.'),

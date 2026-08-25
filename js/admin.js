@@ -285,6 +285,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const input = field.querySelector('.text-input');
       if (map[field.dataset.textKey] !== undefined) input.value = map[field.dataset.textKey];
     });
+    const bgPreview = document.getElementById('bg-photo-preview');
+    if (bgPreview && map.hero_background_url && map.hero_background_url.trim()) {
+      bgPreview.src = map.hero_background_url.trim();
+    }
   }
 
   document.querySelectorAll('.btn-save-text').forEach(btn => {
@@ -299,6 +303,63 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!error) logActivity('bijgewerkt', `Tekst: ${key}`);
     });
   });
+
+  /* ---------- Achtergrondfoto ---------- */
+  const bgPhotoFile = document.getElementById('bg-photo-file');
+  const bgPhotoUploadBtn = document.getElementById('bg-photo-upload-btn');
+  const bgPhotoResetBtn = document.getElementById('bg-photo-reset-btn');
+  const bgPhotoError = document.getElementById('bg-photo-error');
+  const bgPhotoPreview = document.getElementById('bg-photo-preview');
+
+  if (bgPhotoUploadBtn) {
+    bgPhotoUploadBtn.addEventListener('click', async () => {
+      const file = bgPhotoFile.files[0];
+      bgPhotoError.style.display = 'none';
+      if (!file) {
+        bgPhotoError.textContent = 'Kies eerst een foto.';
+        bgPhotoError.style.display = 'block';
+        return;
+      }
+      bgPhotoUploadBtn.disabled = true;
+      bgPhotoUploadBtn.textContent = 'Bezig met uploaden…';
+      try {
+        const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+        const path = `background/${Date.now()}-${safeName}`;
+        const { error: uploadError } = await sb.storage.from('photos').upload(path, file, { cacheControl: '3600', upsert: false });
+        if (uploadError) throw uploadError;
+        const { data: publicUrlData } = sb.storage.from('photos').getPublicUrl(path);
+        const url = publicUrlData.publicUrl;
+
+        const { error: saveError } = await sb.from('site_texts').upsert({ key: 'hero_background_url', value: url, updated_at: new Date().toISOString() });
+        if (saveError) throw saveError;
+
+        bgPhotoPreview.src = url;
+        bgPhotoFile.value = '';
+        showToast('Achtergrondfoto bijgewerkt.');
+        logActivity('bijgewerkt', 'Achtergrondfoto');
+      } catch (err) {
+        bgPhotoError.textContent = 'Uploaden mislukt: ' + (err.message || err);
+        bgPhotoError.style.display = 'block';
+        showToast('Uploaden mislukt.', true);
+      } finally {
+        bgPhotoUploadBtn.disabled = false;
+        bgPhotoUploadBtn.textContent = 'Achtergrondfoto wijzigen';
+      }
+    });
+  }
+
+  if (bgPhotoResetBtn) {
+    bgPhotoResetBtn.addEventListener('click', async () => {
+      if (!confirm('Terugzetten naar de standaardfoto van de website?')) return;
+      bgPhotoResetBtn.disabled = true;
+      const { error } = await sb.from('site_texts').upsert({ key: 'hero_background_url', value: '', updated_at: new Date().toISOString() });
+      bgPhotoResetBtn.disabled = false;
+      if (error) { showToast('Terugzetten mislukt.', true); return; }
+      bgPhotoPreview.src = 'assets/hero-photo.jpg';
+      showToast('Teruggezet naar standaardfoto.');
+      logActivity('bijgewerkt', 'Achtergrondfoto teruggezet naar standaard');
+    });
+  }
 
   /* =========================================================
      MUZIKANTEN
