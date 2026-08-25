@@ -1176,13 +1176,18 @@ body.splash-page{ margin: 0; }
   margin-bottom: 16px;
 }
 .mp-sessions-label{ margin: 14px 0 8px; }
-.mp-sessions{ display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.mp-sessions{ display: flex; flex-direction: column; gap: 0; margin-bottom: 12px; border: 1px solid rgba(16,32,58,.12); border-radius: var(--radius); overflow: hidden; }
 .mp-session-row{
   display: grid;
   grid-template-columns: 130px 145px 1fr 1fr 90px auto;
   gap: 8px;
   align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(16,32,58,.1);
+  background: rgba(255,255,255,.5);
 }
+.mp-session-row:last-child{ border-bottom: none; }
+.mp-session-row:nth-child(even){ background: rgba(16,32,58,.025); }
 .mp-session-row select, .mp-session-row input{
   padding: 9px 10px;
   border: 1px solid rgba(16,32,58,.18);

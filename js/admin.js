@@ -1191,7 +1191,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </select>
         </div>
       </div>
-      <p class="field-hint mp-sessions-label">Sessies (optreden, en eventueel een aparte repetitie op een andere datum):</p>
+      <p class="field-hint mp-sessions-label">Sessies (optreden, en eventueel een aparte repetitie op een andere datum) — <strong>elke sessie hieronder moet apart via workinginthearts.be geregistreerd worden.</strong></p>
       <div class="mp-sessions"></div>
       <p class="mp-subtotal">Subtotaal deze muzikant: <span class="mp-subtotal-value">€ 0,00</span></p>
       <div class="mp-block-actions">
@@ -1472,8 +1472,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const sessionLines = (m.sessions || []).map(s => {
         const sessionTotal = parseEuroAmount(s.amount) + parseEuroAmount(s.travel);
         musicianSubtotal += sessionTotal;
-        return `${esc(s.type || 'Sessie')}${s.date ? ' — ' + formatContractDate(s.date) : ''}: ${esc(s.amount || '—')}${s.travel ? ' + verplaatsing ' + esc(s.travel) : ''} = <strong>${formatEuroAmount(sessionTotal)}</strong>`;
-      }).join('<br>');
+        return `<div class="session-line">${esc(s.type || 'Sessie')}${s.date ? ' — ' + formatContractDate(s.date) : ''}: ${esc(s.amount || '—')}${s.travel ? ' + verplaatsing ' + esc(s.travel) : ''} = <strong>${formatEuroAmount(sessionTotal)}</strong></div>`;
+      }).join('');
       contractGrandTotal += musicianSubtotal;
       return `<tr>
         <td style="font-weight:600;">${esc(m.name)}</td>
@@ -1505,6 +1505,8 @@ document.addEventListener('DOMContentLoaded', () => {
   .musician-table{ margin-top:6px; }
   .musician-table th, .musician-table td{ border-bottom:1px solid #eee; padding:8px 10px; width:auto; font-weight:400; }
   .musician-table th{ color:#666; font-size:.76rem; text-transform:uppercase; letter-spacing:.04em; }
+  .session-line{ padding:5px 0; border-bottom:1px dashed #ddd; }
+  .session-line:last-child{ border-bottom:none; }
   .clause{ font-size:.87rem; color:#333; margin-top:8px; white-space:pre-line; }
   .wita-box{ background:#f7f4ee; border:1px solid #e2ddd3; border-radius:6px; padding:16px 18px; font-size:.85rem; margin-top:10px; white-space:pre-line; }
   .sign-row{ display:flex; justify-content:space-between; gap:60px; margin-top:60px; }
