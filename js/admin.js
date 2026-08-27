@@ -1468,21 +1468,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicianPayments = c.musician_payments || [];
     let contractGrandTotal = 0;
     const musicianRows = musicianPayments.map(m => {
-      let musicianSubtotal = 0;
-      const sessionLines = (m.sessions || []).map(s => {
+      const rowsForMusician = (m.sessions || []).map(s => {
         const sessionTotal = parseEuroAmount(s.amount) + parseEuroAmount(s.travel);
-        musicianSubtotal += sessionTotal;
-        return `<div class="session-line">${esc(s.type || 'Sessie')}${s.date ? ' — ' + formatContractDate(s.date) : ''}: ${esc(s.amount || '—')}${s.travel ? ' + verplaatsing ' + esc(s.travel) : ''} = <strong>${formatEuroAmount(sessionTotal)}</strong></div>`;
-      }).join('');
-      contractGrandTotal += musicianSubtotal;
-      return `<tr>
-        <td style="font-weight:600;">${esc(m.name)}</td>
-        <td>${esc(m.rrn)}</td>
-        <td>${esc(m.iban)}</td>
-        <td>${PAYMENT_METHOD_LABELS[m.method] || esc(m.method)}</td>
-        <td>${sessionLines}</td>
-        <td style="font-weight:600; white-space:nowrap;">${formatEuroAmount(musicianSubtotal)}</td>
-      </tr>`;
+        contractGrandTotal += sessionTotal;
+        return `<tr>
+          <td style="font-weight:600;">${esc(m.name)}</td>
+          <td>${esc(m.rrn)}</td>
+          <td>${esc(m.iban)}</td>
+          <td>${PAYMENT_METHOD_LABELS[m.method] || esc(m.method)}</td>
+          <td style="white-space:nowrap;">${esc(s.type || 'Sessie')}${s.date ? ' — ' + formatContractDate(s.date) : ''}</td>
+          <td style="white-space:nowrap;">${esc(s.amount || '—')}</td>
+          <td style="white-space:nowrap;">${s.travel ? esc(s.travel) : '—'}</td>
+          <td style="font-weight:600; white-space:nowrap;">${formatEuroAmount(sessionTotal)}</td>
+        </tr>`;
+      });
+      // Muzikant zonder sessies (zou niet mogen voorkomen, maar toon voor de zekerheid toch de identiteitsgegevens)
+      if (!rowsForMusician.length) {
+        return `<tr>
+          <td style="font-weight:600;">${esc(m.name)}</td>
+          <td>${esc(m.rrn)}</td>
+          <td>${esc(m.iban)}</td>
+          <td>${PAYMENT_METHOD_LABELS[m.method] || esc(m.method)}</td>
+          <td colspan="4" style="color:#999;">Geen sessies ingevuld</td>
+        </tr>`;
+      }
+      return rowsForMusician.join('');
     }).join('');
 
     const win = window.open('', '_blank');
@@ -1502,11 +1512,9 @@ document.addEventListener('DOMContentLoaded', () => {
   table{ width:100%; border-collapse:collapse; font-size:.9rem; }
   th{ text-align:left; width:200px; padding:6px 10px 6px 0; vertical-align:top; color:#444; font-weight:600; }
   td{ padding:6px 0; vertical-align:top; }
-  .musician-table{ margin-top:6px; }
-  .musician-table th, .musician-table td{ border-bottom:1px solid #eee; padding:8px 10px; width:auto; font-weight:400; }
-  .musician-table th{ color:#666; font-size:.76rem; text-transform:uppercase; letter-spacing:.04em; }
-  .session-line{ padding:5px 0; border-bottom:1px dashed #ddd; }
-  .session-line:last-child{ border-bottom:none; }
+  .musician-table{ margin-top:6px; font-size:.82rem; }
+  .musician-table th, .musician-table td{ border-bottom:1px solid #eee; padding:6px 8px; width:auto; font-weight:400; }
+  .musician-table th{ color:#666; font-size:.7rem; text-transform:uppercase; letter-spacing:.03em; }
   .clause{ font-size:.87rem; color:#333; margin-top:8px; white-space:pre-line; }
   .wita-box{ background:#f7f4ee; border:1px solid #e2ddd3; border-radius:6px; padding:16px 18px; font-size:.85rem; margin-top:10px; white-space:pre-line; }
   .sign-row{ display:flex; justify-content:space-between; gap:60px; margin-top:60px; }
@@ -1550,9 +1558,9 @@ document.addEventListener('DOMContentLoaded', () => {
   ${musicianRows ? `
   <h2>Muzikanten &amp; vergoeding</h2>
   <table class="musician-table">
-    <thead><tr><th>Naam</th><th>Rijksregisternr.</th><th>Rekeningnummer</th><th>Betaalwijze</th><th>Sessies &amp; bedrag</th><th>Subtotaal</th></tr></thead>
+    <thead><tr><th>Naam</th><th>Rijksreg.nr.</th><th>Rekeningnr.</th><th>Betaalwijze</th><th>Sessie</th><th>Bedrag</th><th>Vervoer</th><th>Totaal</th></tr></thead>
     <tbody>${musicianRows}</tbody>
-    <tfoot><tr><td colspan="5" style="text-align:right; font-weight:600; padding-top:12px; border-top:2px solid #10203A;">Totaal (incl. verplaatsingskosten)</td><td style="font-weight:700; padding-top:12px; border-top:2px solid #10203A; white-space:nowrap;">${formatEuroAmount(contractGrandTotal)}</td></tr></tfoot>
+    <tfoot><tr><td colspan="7" style="text-align:right; font-weight:600; padding-top:12px; border-top:2px solid #10203A;">Totaal (incl. verplaatsingskosten)</td><td style="font-weight:700; padding-top:12px; border-top:2px solid #10203A; white-space:nowrap;">${formatEuroAmount(contractGrandTotal)}</td></tr></tfoot>
   </table>
   ` : ''}
 
