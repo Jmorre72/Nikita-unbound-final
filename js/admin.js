@@ -1099,13 +1099,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const SESSION_TYPES = ['Optreden', 'Repetitie', 'Andere'];
 
   let knownMusicians = [];
-  sb.from('musicians').select('name, rrn, iban').then(({ data }) => {
-    if (data) {
-      knownMusicians = data.filter(m => m.name);
+  let contractDefaults = { fee: '', travel: '', deposit: '' };
+
+  async function loadContractDefaults() {
+    const [musiciansRes, textsRes] = await Promise.all([
+      sb.from('musicians').select('name, rrn, iban').order('sort_order', { ascending: true }),
+      sb.from('site_texts').select('key, value').in('key', ['contract_default_fee', 'contract_default_travel', 'contract_default_deposit'])
+    ]);
+
+    if (musiciansRes.data) {
+      knownMusicians = musiciansRes.data.filter(m => m.name);
       const list = document.getElementById('known-musicians-list');
       if (list) list.innerHTML = knownMusicians.map(m => `<option value="${m.name.replace(/"/g, '&quot;')}">`).join('');
     }
-  });
+    if (textsRes.data) {
+      textsRes.data.forEach(row => {
+        if (row.key === 'contract_default_fee') contractDefaults.fee = row.value || '';
+        if (row.key === 'contract_default_travel') contractDefaults.travel = row.value || '';
+        if (row.key === 'contract_default_deposit') contractDefaults.deposit = row.value || '';
+      });
+    }
+    resetContractForm();
+  }
 
   /* ---------- Bedragen: parsen ("€ 81,90" -> 81.9) en formatteren ---------- */
   function parseEuroAmount(str) {
@@ -1286,11 +1301,26 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('c-image-rights').checked = true;
     document.getElementById('c-status').value = 'concept';
     musicianPaymentRows.innerHTML = '';
-    musicianPaymentRows.appendChild(makeMusicianPaymentBlock());
+    if (knownMusicians.length) {
+      knownMusicians.forEach(m => {
+        musicianPaymentRows.appendChild(makeMusicianPaymentBlock({
+          name: m.name,
+          rrn: m.rrn || '',
+          iban: m.iban || '',
+          method: 'wita',
+          sessions: [{ type: 'Optreden', date: '', amount: contractDefaults.fee, travel: contractDefaults.travel }]
+        }));
+      });
+    } else {
+      musicianPaymentRows.appendChild(makeMusicianPaymentBlock());
+    }
+    const depositField = document.getElementById('c-deposit-amount');
+    if (depositField && contractDefaults.deposit) depositField.value = contractDefaults.deposit;
+    updateContractGrandTotal();
     contractSubmitBtn.textContent = 'Contract opslaan';
     contractCancelBtn.hidden = true;
   }
-  resetContractForm();
+  loadContractDefaults();
 
   contractCancelBtn.addEventListener('click', resetContractForm);
 

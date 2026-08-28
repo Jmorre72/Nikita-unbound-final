@@ -910,7 +910,7 @@
 
       <!-- ---------- CONTRACTEN ---------- -->
       <div class="tab-panel" data-tab-panel="contracten" hidden>
-        <p class="lead-text">Maak contracten aan voor optredens, bewaar ze, print ze of sla ze op als PDF, en e-mail ze naar de organisator.</p>
+        <p class="lead-text">Maak contracten aan voor optredens, bewaar ze, print ze of sla ze op als PDF, en e-mail ze naar de organisator. Een nieuw contract start automatisch met jullie vaste muzikanten en de standaardbedragen hieronder al ingevuld — verwijder gerust een muzikant die niet meespeelt, of pas bedragen per contract aan.</p>
 
         <div class="admin-text-groups" style="margin-bottom:30px;">
           <details class="admin-text-group">
@@ -929,6 +929,21 @@
               <div class="admin-text-field" data-text-key="contract_bank_iban">
                 <label>Rekeningnummer (IBAN) voor betaling <span class="field-hint">(leeg = niet vermeld op het contract)</span></label>
                 <input type="text" class="text-input" placeholder="BE00 0000 0000 0000">
+                <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+              </div>
+              <div class="admin-text-field" data-text-key="contract_default_fee">
+                <label>Standaardbedrag per sessie <span class="field-hint">(wordt automatisch voorgesteld bij een nieuwe sessie, mag je per contract nog aanpassen)</span></label>
+                <input type="text" class="text-input" placeholder="Bv. € 81,90">
+                <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+              </div>
+              <div class="admin-text-field" data-text-key="contract_default_travel">
+                <label>Standaard vervoerskosten per sessie</label>
+                <input type="text" class="text-input" placeholder="Bv. € 23,40">
+                <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
+              </div>
+              <div class="admin-text-field" data-text-key="contract_default_deposit">
+                <label>Standaard voorschot</label>
+                <input type="text" class="text-input" placeholder="Bv. € 100">
                 <button class="btn btn-outline-dark btn-save-text" type="button">Bewaar</button>
               </div>
               <div class="admin-text-field" data-text-key="contract_vat_default">
