@@ -58,6 +58,7 @@ create table if not exists songs (
   title text not null,
   artist text not null,
   decade text not null, -- '60s','70s','80s','90s','2000s','2010s'
+  audio_url text,
   created_at timestamptz not null default now()
 );
 
@@ -235,22 +236,8 @@ insert into site_texts (key, value) values
   ('boek_submit_btn', 'Verstuur aanvraag'),
   ('boek_form_note', 'We behandelen uw gegevens vertrouwelijk en gebruiken ze uitsluitend om uw aanvraag te beantwoorden.'),
   ('boek_success_msg', 'Bedankt voor uw aanvraag! We nemen binnenkort contact met u op.'),
-  ('media_hero_eyebrow', 'Beeld & geluid'),
-  ('media_hero_title', 'Beluister en bekijk Nikita Unbound'),
-  ('media_hero_lead', 'Een greep uit onze live-registraties en studio-opnames, zodat u perfect weet wat u kan verwachten op uw feest.'),
   ('videos_eyebrow', 'Video''s'),
   ('videos_title', 'Live in beeld'),
-  ('audio_eyebrow', 'Opnames'),
-  ('audio_title', 'Beluister onze nummers'),
-  ('audio1_title', 'Fly Me to the Moon (akoestische versie)'),
-  ('audio1_meta', 'Studio-opname'),
-  ('audio2_title', 'Songbird'),
-  ('audio2_meta', 'Live registratie'),
-  ('audio3_title', 'Ho Hey'),
-  ('audio3_meta', 'Studio-opname'),
-  ('audio_placeholder_note', 'Voeg uw eigen MP3-bestanden toe in de map assets/audio/ en verwijs ernaar in media.html om deze spelers te laten afspelen.'),
-  ('media_cta_eyebrow', 'Overtuigd?'),
-  ('media_cta_title', 'Boek Nikita Unbound voor uw feest'),
   ('fotos_hero_eyebrow', 'Foto''s'),
   ('fotos_hero_title', 'Momenten in beeld'),
   ('fotos_hero_lead', 'Een sfeerbeeld van Nikita Unbound op locatie en achter de schermen.'),
@@ -273,14 +260,20 @@ create table if not exists musicians (
   photo_pos_y integer not null default 50,
   rrn text,
   iban text,
+  show_on_public_page boolean not null default true,
   sort_order integer not null default 0,
   created_at timestamptz not null default now()
 );
 
 alter table musicians enable row level security;
 
+-- BELANGRIJK: rrn en iban zijn gevoelige persoonsgegevens. De ruwe tabel is
+-- daarom NIET publiek leesbaar — enkel de ingelogde beheerder mag ze zien.
+-- De publieke website gebruikt in plaats daarvan de view "musicians_public"
+-- hieronder, die deze twee kolommen bewust weglaat.
 drop policy if exists "Publiek lezen - musicians" on musicians;
-create policy "Publiek lezen - musicians" on musicians for select using (true);
+drop policy if exists "Beheerder leest - musicians" on musicians;
+create policy "Beheerder leest - musicians" on musicians for select to authenticated using (true);
 
 drop policy if exists "Beheerder schrijft - musicians insert" on musicians;
 create policy "Beheerder schrijft - musicians insert" on musicians for insert to authenticated with check (true);
@@ -290,6 +283,16 @@ create policy "Beheerder schrijft - musicians update" on musicians for update to
 
 drop policy if exists "Beheerder schrijft - musicians delete" on musicians;
 create policy "Beheerder schrijft - musicians delete" on musicians for delete to authenticated using (true);
+
+-- Publieke, veilige view: enkel de kolommen die de website mag tonen.
+-- Toont bovendien enkel muzikanten met show_on_public_page = true.
+drop view if exists musicians_public;
+create view musicians_public as
+  select id, name, role, age, bio, photo_url, photo_pos_x, photo_pos_y, sort_order, created_at
+  from musicians
+  where show_on_public_page = true;
+
+grant select on musicians_public to anon, authenticated;
 
 -- Standaard muzikanten (enkel ingevoegd als de tabel nog leeg is,
 -- zodat dit veilig meermaals uitgevoerd kan worden)
@@ -509,8 +512,8 @@ insert into site_texts (key, value) values
   ('contract_company_name', 'Nikita Unbound'),
   ('contract_company_address', 'Gent, België'),
   ('contract_bank_iban', ''),
-  ('contract_default_fee', '€ 81,90'),
-  ('contract_default_travel', '€ 23,40'),
+  ('contract_default_fee', '€ 80'),
+  ('contract_default_travel', '€ 20'),
   ('contract_default_deposit', '€ 100'),
   ('contract_vat_default', '(nog te bepalen)'),
   ('contract_cancellation_policy', 'Bij annulering door de opdrachtgever tot 30 dagen voor het optreden is 25% van de gage verschuldigd als annuleringsvergoeding. Bij annulering binnen de 30 dagen voor het optreden is de volledige gage verschuldigd. Bij overmacht langs de kant van Nikita Unbound (bv. ziekte) wordt in onderling overleg een alternatieve datum voorgesteld, of wordt een reeds betaald voorschot volledig terugbetaald.'),

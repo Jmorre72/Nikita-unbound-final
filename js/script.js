@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.supabaseClient) {
       try {
         const { data, error } = await window.supabaseClient
-          .from('musicians')
+          .from('musicians_public')
           .select('*')
           .order('sort_order', { ascending: true });
         if (!error && data && data.length) return data;
@@ -230,9 +230,34 @@ document.addEventListener('DOMContentLoaded', () => {
         <td class="select-col"><input type="checkbox" class="song-check" aria-label="Selecteer ${s.title}" ${selectedSet.has(s.title) ? 'checked' : ''}></td>
         <td><div class="song-title">${s.title}</div><div class="song-artist">${s.artist}</div></td>
         <td><span class="decade-tag">${s.decade}</span></td>
+        <td class="listen-col">${s.audio_url ? `<button type="button" class="btn-listen" data-audio-url="${s.audio_url}" aria-label="Beluister ${s.title}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>` : ''}</td>
       </tr>
+      <tr class="song-audio-row" hidden><td colspan="4"></td></tr>
     `).join('');
     updateSelectionBar();
+    bindListenButtons();
+  }
+
+  function bindListenButtons() {
+    songTableBody.querySelectorAll('.btn-listen').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row = btn.closest('tr');
+        const audioRow = row.nextElementSibling;
+        const cell = audioRow.querySelector('td');
+        const alreadyOpen = !audioRow.hidden;
+
+        // sluit eventueel een andere openstaande speler
+        songTableBody.querySelectorAll('.song-audio-row').forEach(r => {
+          r.hidden = true;
+          r.querySelector('td').innerHTML = '';
+        });
+
+        if (!alreadyOpen) {
+          cell.innerHTML = `<audio controls autoplay src="${btn.dataset.audioUrl}" style="width:100%; margin:8px 0;"></audio>`;
+          audioRow.hidden = false;
+        }
+      });
+    });
   }
 
   function updateSelectionBar() {

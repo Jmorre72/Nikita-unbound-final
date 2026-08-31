@@ -458,6 +458,26 @@ section .eyebrow.on-dark::before{ background: var(--gold-bright); }
 }
 .song-row.is-selected{ background: rgba(216,182,119,.1); }
 
+.listen-col{ width: 60px; text-align: center; }
+.btn-listen{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(198,120,94,.35);
+  background: rgba(198,120,94,.08);
+  color: var(--terracotta);
+  cursor: pointer;
+  padding: 0;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+.btn-listen svg{ width: 15px; height: 15px; margin-left: 2px; }
+.btn-listen:hover{ background: rgba(198,120,94,.16); border-color: var(--terracotta); transform: scale(1.06); }
+.btn-listen.is-playing{ background: var(--terracotta); border-color: var(--terracotta); color: #fff; }
+.btn-listen.is-playing svg{ margin-left: 0; }
+
 .selection-bar{
   position: sticky;
   bottom: 0;

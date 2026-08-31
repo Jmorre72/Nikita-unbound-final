@@ -452,6 +452,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="photo-position-hint">Sleep de foto om het gezicht te centreren.</p>
           </div>
           <p class="row-photo-error field-error" style="display:none;"></p>
+          <label style="display:flex; align-items:center; gap:8px; font-size:.82rem;">
+            <input type="checkbox" class="row-show-public" ${m.show_on_public_page !== false ? 'checked' : ''} style="width:auto;">
+            Toon op de publieke "Muzikanten"-pagina
+          </label>
         </div>
         <div style="display:flex; gap:10px;">
           <button class="btn btn-outline-dark btn-save-musician" type="button">Bewaar</button>
@@ -488,6 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
           bio: row.querySelector('.row-bio').value,
           rrn: row.querySelector('.row-rrn').value.trim(),
           iban: row.querySelector('.row-iban').value.trim(),
+          show_on_public_page: row.querySelector('.row-show-public').checked,
           photo_pos_x: Number(frame.dataset.posX || 50),
           photo_pos_y: Number(frame.dataset.posY || 50)
         };
@@ -554,6 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bio: document.getElementById('musician-bio').value,
         rrn: document.getElementById('musician-rrn').value.trim(),
         iban: document.getElementById('musician-iban').value.trim(),
+        show_on_public_page: document.getElementById('musician-show-public').checked,
         sort_order: nextOrder
       };
 
@@ -1021,13 +1027,22 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSongList(data || []);
   }
 
+  async function uploadSongAudio(file) {
+    const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+    const path = `songs/${Date.now()}-${safeName}`;
+    const { error: uploadError } = await sb.storage.from('audio').upload(path, file, { cacheControl: '3600', upsert: false });
+    if (uploadError) throw uploadError;
+    const { data: publicUrlData } = sb.storage.from('audio').getPublicUrl(path);
+    return publicUrlData.publicUrl;
+  }
+
   function renderSongList(songs) {
     if (!songs.length) {
       songList.innerHTML = '<p class="no-results">Nog geen nummers toegevoegd.</p>';
       return;
     }
     songList.innerHTML = songs.map(s => `
-      <div class="admin-list-row" data-song-id="${s.id}">
+      <div class="admin-list-row" data-song-id="${s.id}" data-audio-url="${s.audio_url ? s.audio_url.replace(/"/g, '&quot;') : ''}" style="flex-wrap:wrap; align-items:center;">
         <input type="text" class="row-title" value="${(s.title || '').replace(/"/g, '&quot;')}">
         <input type="text" class="row-artist" value="${(s.artist || '').replace(/"/g, '&quot;')}">
         <select class="row-decade">
@@ -1035,6 +1050,12 @@ document.addEventListener('DOMContentLoaded', () => {
         </select>
         <button class="btn btn-outline-dark btn-save-song" type="button">Bewaar</button>
         <button class="btn btn-outline-dark btn-delete-song" type="button">Verwijder</button>
+        <div class="song-audio-row" style="flex-basis:100%; display:flex; align-items:center; gap:12px; margin-top:8px;">
+          ${s.audio_url
+            ? `<audio controls src="${s.audio_url}" style="height:32px; max-width:260px;"></audio><button class="btn btn-outline-dark btn-remove-audio" type="button" style="padding:6px 12px; font-size:.74rem;">Audio verwijderen</button>`
+            : `<input type="file" class="song-audio-file" accept="audio/*" style="max-width:220px;"><button class="btn btn-outline-dark btn-upload-audio" type="button" style="padding:6px 12px; font-size:.74rem;">Audio toevoegen</button><span class="field-hint" style="margin:0;">Geen audio: geen beluister-knop op de repertoirepagina.</span>`}
+        </div>
+        <p class="song-audio-error field-error" style="display:none; flex-basis:100%; margin:4px 0 0;"></p>
       </div>
     `).join('');
 
@@ -1064,6 +1085,47 @@ document.addEventListener('DOMContentLoaded', () => {
         row.remove();
         showToast('Nummer verwijderd.');
         logActivity('verwijderd', `Nummer: ${title}`);
+      });
+    });
+
+    songList.querySelectorAll('.btn-upload-audio').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const row = btn.closest('[data-song-id]');
+        const fileInput = row.querySelector('.song-audio-file');
+        const errorEl = row.querySelector('.song-audio-error');
+        const title = row.querySelector('.row-title').value;
+        errorEl.style.display = 'none';
+        const file = fileInput.files[0];
+        if (!file) { errorEl.textContent = 'Kies eerst een audiobestand.'; errorEl.style.display = 'block'; return; }
+        btn.disabled = true;
+        btn.textContent = 'Bezig…';
+        try {
+          const url = await uploadSongAudio(file);
+          const { error } = await sb.from('songs').update({ audio_url: url }).eq('id', row.dataset.songId);
+          if (error) throw error;
+          showToast('Audio toegevoegd.');
+          logActivity('bijgewerkt', `Audio toegevoegd bij: ${title}`);
+          loadSongs();
+        } catch (err) {
+          errorEl.textContent = 'Uploaden mislukt: ' + (err.message || err);
+          errorEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Audio toevoegen';
+        }
+      });
+    });
+
+    songList.querySelectorAll('.btn-remove-audio').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Audio van dit nummer verwijderen? Het "Beluister"-knopje verdwijnt dan van de repertoirepagina.')) return;
+        const row = btn.closest('[data-song-id]');
+        const title = row.querySelector('.row-title').value;
+        btn.disabled = true;
+        const { error } = await sb.from('songs').update({ audio_url: null }).eq('id', row.dataset.songId);
+        if (error) { showToast('Verwijderen mislukt.', true); btn.disabled = false; return; }
+        showToast('Audio verwijderd.');
+        logActivity('bijgewerkt', `Audio verwijderd bij: ${title}`);
+        loadSongs();
       });
     });
   }
@@ -1308,7 +1370,10 @@ document.addEventListener('DOMContentLoaded', () => {
           rrn: m.rrn || '',
           iban: m.iban || '',
           method: 'wita',
-          sessions: [{ type: 'Optreden', date: '', amount: contractDefaults.fee, travel: contractDefaults.travel }]
+          sessions: [
+            { type: 'Repetitie', date: '', amount: contractDefaults.fee, travel: contractDefaults.travel },
+            { type: 'Optreden', date: '', amount: contractDefaults.fee, travel: contractDefaults.travel }
+          ]
         }));
       });
     } else {

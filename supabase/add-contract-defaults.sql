@@ -6,7 +6,7 @@
 -- =========================================================
 
 insert into site_texts (key, value) values
-  ('contract_default_fee', '€ 81,90'),
-  ('contract_default_travel', '€ 23,40'),
+  ('contract_default_fee', '€ 80'),
+  ('contract_default_travel', '€ 20'),
   ('contract_default_deposit', '€ 100')
-on conflict (key) do nothing;
+on conflict (key) do update set value = excluded.value;
