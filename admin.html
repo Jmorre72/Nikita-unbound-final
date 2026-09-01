@@ -59,9 +59,7 @@
       <nav class="tab-bar">
         <button class="tab-btn is-active" data-tab="teksten" type="button">Teksten</button>
         <button class="tab-btn" data-tab="muzikanten" type="button">Muzikanten</button>
-        <button class="tab-btn" data-tab="fotos" type="button">Foto's</button>
-        <button class="tab-btn" data-tab="muziek" type="button">Muziek</button>
-        <button class="tab-btn" data-tab="videos" type="button">Video's</button>
+        <button class="tab-btn" data-tab="fotos" type="button">Foto's &amp; Video's</button>
         <button class="tab-btn" data-tab="kalender" type="button">Kalender</button>
         <button class="tab-btn" data-tab="repertoire" type="button">Repertoire</button>
         <button class="tab-btn" data-tab="contracten" type="button">Contracten</button>
@@ -710,8 +708,9 @@
 
       <!-- ---------- FOTO'S ---------- -->
       <div class="tab-panel" data-tab-panel="fotos" hidden>
-        <p class="lead-text">Voeg foto's toe of verwijder ze. Nieuwe foto's verschijnen meteen op de fotopagina.</p>
+        <p class="lead-text">Voeg foto's en video's toe of verwijder ze. Nieuwe foto's en video's verschijnen meteen op de pagina "Foto's &amp; video's".</p>
 
+        <h3 class="admin-form-section-title" style="margin-top:0;">Foto's</h3>
         <form id="photo-upload-form" class="admin-upload-form">
           <div class="field">
             <label for="photo-file">Nieuwe foto</label>
@@ -726,35 +725,9 @@
         </form>
 
         <div class="admin-photo-grid" id="admin-photo-grid"></div>
-      </div>
 
-      <!-- ---------- MUZIEK ---------- -->
-      <div class="tab-panel" data-tab-panel="muziek" hidden>
-        <p class="lead-text">Upload opnames of verwijder ze. Nieuwe nummers verschijnen meteen op de "Beluister"-pagina.</p>
-
-        <form id="track-upload-form" class="admin-upload-form">
-          <div class="field">
-            <label for="track-file">Audiobestand (mp3, wav, ...)</label>
-            <input type="file" id="track-file" accept="audio/*" required>
-          </div>
-          <div class="field">
-            <label for="track-title">Titel</label>
-            <input type="text" id="track-title" placeholder="Bv. Fly Me to the Moon" required>
-          </div>
-          <div class="field">
-            <label for="track-meta">Omschrijving (optioneel)</label>
-            <input type="text" id="track-meta" placeholder="Bv. Studio-opname">
-          </div>
-          <button type="submit" class="btn btn-gold" id="track-upload-btn">Nummer toevoegen</button>
-          <p id="track-upload-error" class="field-error" style="display:none;"></p>
-        </form>
-
-        <div class="admin-list" id="admin-track-list"></div>
-      </div>
-
-      <!-- ---------- VIDEO'S ---------- -->
-      <div class="tab-panel" data-tab-panel="videos" hidden>
-        <p class="lead-text">Voeg video's toe voor "Live in beeld". Plak een YouTube- of Vimeo-link, óf upload een eigen videobestand — kies wat het best past.</p>
+        <h3 class="admin-form-section-title">Video's</h3>
+        <p class="lead-text" style="margin-top:-10px;">Plak een YouTube- of Vimeo-link, óf upload een eigen videobestand — kies wat het best past.</p>
 
         <form id="video-add-form" class="admin-upload-form">
           <div class="field" style="flex-basis:100%;">

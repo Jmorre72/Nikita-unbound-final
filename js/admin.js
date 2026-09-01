@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTexts();
     loadMusicians();
     loadPhotos();
-    loadTracks();
     loadVideos();
     loadGigs();
     loadSongs();
@@ -673,116 +672,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } finally {
       uploadBtn.disabled = false;
       uploadBtn.textContent = 'Foto toevoegen';
-    }
-  });
-
-  /* =========================================================
-     MUZIEK
-     ========================================================= */
-  const trackList = document.getElementById('admin-track-list');
-
-  async function loadTracks() {
-    const { data, error } = await sb.from('tracks').select('*').order('sort_order', { ascending: true });
-    if (error) { showToast('Kon muziek niet laden.', true); return; }
-    renderTrackList(data || []);
-  }
-
-  function renderTrackList(tracks) {
-    if (!tracks.length) {
-      trackList.innerHTML = '<p class="no-results">Nog geen muziek toegevoegd.</p>';
-      return;
-    }
-    trackList.innerHTML = tracks.map(t => `
-      <div class="admin-list-row" data-track-id="${t.id}" style="align-items: flex-start; flex-wrap: wrap;">
-        <div style="display:flex; flex-direction:column; gap:8px; flex:1; min-width:220px;">
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <input type="text" class="row-title" value="${(t.title || '').replace(/"/g, '&quot;')}" placeholder="Titel" style="flex:1; min-width:160px;">
-            <input type="text" class="row-meta" value="${(t.meta || '').replace(/"/g, '&quot;')}" placeholder="Omschrijving" style="flex:1; min-width:160px;">
-          </div>
-          <audio controls src="${t.audio_url}" style="width:100%; height:34px;"></audio>
-        </div>
-        <div style="display:flex; gap:10px;">
-          <button class="btn btn-outline-dark btn-save-track" type="button">Bewaar</button>
-          <button class="btn btn-outline-dark btn-delete-track" type="button">Verwijder</button>
-        </div>
-      </div>
-    `).join('');
-
-    trackList.querySelectorAll('.btn-save-track').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const row = btn.closest('[data-track-id]');
-        const title = row.querySelector('.row-title').value;
-        btn.disabled = true;
-        const { error } = await sb.from('tracks').update({
-          title: title,
-          meta: row.querySelector('.row-meta').value
-        }).eq('id', row.dataset.trackId);
-        btn.disabled = false;
-        showToast(error ? 'Bewaren mislukt.' : 'Nummer bewaard.', Boolean(error));
-        if (!error) logActivity('bijgewerkt', `Muziek: ${title}`);
-      });
-    });
-
-    trackList.querySelectorAll('.btn-delete-track').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        if (!confirm('Dit nummer verwijderen?')) return;
-        const row = btn.closest('[data-track-id]');
-        const title = row.querySelector('.row-title').value;
-        const { error } = await sb.from('tracks').delete().eq('id', row.dataset.trackId);
-        if (error) { showToast('Verwijderen mislukt.', true); return; }
-        row.remove();
-        showToast('Nummer verwijderd.');
-        logActivity('verwijderd', `Muziek: ${title}`);
-      });
-    });
-  }
-
-  document.getElementById('track-upload-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const fileInput = document.getElementById('track-file');
-    const titleInput = document.getElementById('track-title');
-    const metaInput = document.getElementById('track-meta');
-    const errorEl = document.getElementById('track-upload-error');
-    const uploadBtn = document.getElementById('track-upload-btn');
-    errorEl.style.display = 'none';
-
-    const file = fileInput.files[0];
-    if (!file) return;
-
-    uploadBtn.disabled = true;
-    uploadBtn.textContent = 'Bezig met uploaden…';
-
-    try {
-      const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
-      const path = `${Date.now()}-${safeName}`;
-
-      const { error: uploadError } = await sb.storage.from('audio').upload(path, file, { cacheControl: '3600', upsert: false });
-      if (uploadError) throw uploadError;
-
-      const { data: publicUrlData } = sb.storage.from('audio').getPublicUrl(path);
-
-      const { data: existing } = await sb.from('tracks').select('sort_order').order('sort_order', { ascending: false }).limit(1);
-      const nextOrder = existing && existing.length ? existing[0].sort_order + 1 : 0;
-
-      const { error: insertError } = await sb.from('tracks').insert({
-        title: titleInput.value.trim(),
-        meta: metaInput.value.trim(),
-        audio_url: publicUrlData.publicUrl,
-        sort_order: nextOrder
-      });
-      if (insertError) throw insertError;
-
-      const savedTitle = titleInput.value.trim();
-      e.target.reset();
-      showToast('Nummer toegevoegd.');
-      logActivity('aangemaakt', `Muziek: ${savedTitle}`);
-      loadTracks();
-    } catch (err) {
-      errorEl.textContent = 'Uploaden mislukt: ' + (err.message || err) + ' (bestaat de opslagruimte "audio" al?)';
-      errorEl.style.display = 'block';
-    } finally {
-      uploadBtn.disabled = false;
-      uploadBtn.textContent = 'Nummer toevoegen';
     }
   });
 
