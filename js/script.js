@@ -184,11 +184,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const songTableBody = document.querySelector('[data-song-table-body]');
   const selectedSet = new Set();
   let SONGS_DATA = FALLBACK_SONGS;
+  const decadeChips = document.querySelectorAll('[data-decade-filter]');
+  const songSearchInput = document.querySelector('[data-song-search]');
+  let currentDecade = 'all';
 
   if (songTableBody) {
+    renderSongs('all', ''); // toon meteen de standaardlijst, geen lege tabel tijdens het laden
     loadSongs().then(songs => {
       SONGS_DATA = songs;
-      renderSongs('all', '');
+      renderSongs(currentDecade, songSearchInput ? songSearchInput.value : '');
     });
   }
 
@@ -270,21 +274,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (songTableBody) {
-    const chips = document.querySelectorAll('[data-decade-filter]');
-    const searchInput = document.querySelector('[data-song-search]');
-    let currentDecade = 'all';
-
-    chips.forEach(chip => {
+    decadeChips.forEach(chip => {
       chip.addEventListener('click', () => {
-        chips.forEach(c => c.classList.remove('is-active'));
+        decadeChips.forEach(c => c.classList.remove('is-active'));
         chip.classList.add('is-active');
         currentDecade = chip.dataset.decadeFilter;
-        renderSongs(currentDecade, searchInput ? searchInput.value : '');
+        renderSongs(currentDecade, songSearchInput ? songSearchInput.value : '');
       });
     });
 
-    if (searchInput) {
-      searchInput.addEventListener('input', () => renderSongs(currentDecade, searchInput.value));
+    if (songSearchInput) {
+      songSearchInput.addEventListener('input', () => renderSongs(currentDecade, songSearchInput.value));
     }
 
     songTableBody.addEventListener('change', (e) => {

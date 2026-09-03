@@ -908,7 +908,7 @@ document.addEventListener('DOMContentLoaded', () => {
      REPERTOIRE
      ========================================================= */
   const songList = document.getElementById('admin-song-list');
-  const DECADE_LABELS = { '60s': 'Jaren 60', '70s': 'Jaren 70', '80s': 'Jaren 80', '90s': 'Jaren 90', '2000s': 'Jaren 2000', '2010s': 'Jaren 2010+' };
+  const DECADE_LABELS = { '60s': 'Jaren 60', '70s': 'Jaren 70', '80s': 'Jaren 80', '90s': 'Jaren 90', '2000s': 'Jaren 2000', '2010s': 'Jaren 2010', '2020s': 'Jaren 2020+' };
 
   async function loadSongs() {
     const { data, error } = await sb.from('songs').select('*').order('title', { ascending: true });
@@ -1029,7 +1029,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     if (error) { showToast('Toevoegen mislukt.', true); return; }
     e.target.reset();
-    document.getElementById('song-decade').value = '2010s';
+    document.getElementById('song-decade').value = '2020s';
     showToast('Nummer toegevoegd.');
     logActivity('aangemaakt', `Nummer: ${title}`);
     loadSongs();
